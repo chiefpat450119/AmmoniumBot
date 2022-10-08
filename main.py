@@ -1,5 +1,6 @@
 import praw
 import random
+import os
 
 # TODO: Add links for Paypal or Patreon or something
 
@@ -43,11 +44,15 @@ class LooseMistake(Mistake):
         self.explanation = "Loose is an adjective meaning the opposite of tight, while lose is a verb."
 
 
-reddit = praw.Reddit(client_id="nBI2PCLS6GhozDY4hG-5gg",
-                     client_secret="QhpgSbwGbPlKW1VJ-hyTgS3mJj16YA",
+client_id = os.environ.get("CLIENT_ID")
+client_secret = os.environ.get("CLIENT_SECRET")
+username = os.environ.get("USERNAME")
+password = os.environ.get("PASSWORD")
+reddit = praw.Reddit(client_id=client_id,
+                     client_secret=client_secret,
                      user_agent="console:ammonium_bot:v1.0.0 (by /u/chiefpat450119)",
-                     username="ammonium_bot",
-                     password="patrickqpwo")
+                     username=username,
+                     password=password)
 
 monitored_subreddits = ["askreddit", "memes", "dankmemes", "funny", "pics", "gaming", "aww", "videos", "worldnews", "news", "science", "technology", "gifs", "askscience", "tennis", "showerthoughts"]
 
