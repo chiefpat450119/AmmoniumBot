@@ -46,12 +46,11 @@ class LooseMistake(Mistake):
 
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
-username = os.environ.get("USERNAME")
 password = os.environ.get("PASSWORD")
 reddit = praw.Reddit(client_id=client_id,
                      client_secret=client_secret,
                      user_agent="console:ammonium_bot:v1.0.0 (by /u/chiefpat450119)",
-                     username=username,
+                     username="ammonium_bot",
                      password=password)
 
 monitored_subreddits = ["askreddit", "memes", "dankmemes", "funny", "pics", "gaming", "aww", "videos", "worldnews", "news", "science", "technology", "gifs", "askscience", "tennis", "showerthoughts"]
