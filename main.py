@@ -2,7 +2,7 @@ import praw
 import random
 import os
 
-# TODO: Add links for Paypal or Patreon or something
+# TODO: Add links for Paypal or Patreon
 
 
 class Mistake:
