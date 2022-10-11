@@ -1,4 +1,5 @@
 import praw
+from praw.exceptions import RedditAPIException
 import random
 import os
 
@@ -104,23 +105,26 @@ def is_bot(comment):
 
 
 subreddit = reddit.subreddit(random.choice(monitored_subreddits))
-for submission in subreddit.hot(limit=20):
-    if not submission.locked:
-        submission.comments.replace_more(limit=None)
-        for comment in submission.comments.list():
-            print(f"Checking comment {comment.id}")
-            if not comment.saved and not is_bot(comment):
-                for mistake in mistakes:
-                    correction = mistake.check(comment.body.lower())
+try:
+    for submission in subreddit.hot(limit=20):
+        if not submission.locked:
+            submission.comments.replace_more(limit=None)
+            for comment in submission.comments.list():
+                print(f"Checking comment {comment.id}")
+                if not comment.saved and not is_bot(comment):
+                    for mistake in mistakes:
+                        correction = mistake.check(comment.body.lower())
 
-                    if correction:
-                        explanation = mistake.explain()
-                        comment.reply(body=f"""Did you mean to say \"{correction}\"?  
-                            Explanation: {explanation}  
-                            ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
-                            ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.  
-                            ^^developed ^^by ^^[chiefpat450119](https://www.reddit.com/user/chiefpat450119)  
-                            ^^[Github](https://github.com/chiefpat450119)""")
-                        print(f"Corrected a mistake in comment {comment.id}")
-                        comment.save()
-                        break
+                        if correction:
+                            explanation = mistake.explain()
+                            comment.reply(body=f"""Did you mean to say \"{correction}\"?  
+                                Explanation: {explanation}  
+                                ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
+                                ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.  
+                                ^^developed ^^by ^^[chiefpat450119](https://www.reddit.com/user/chiefpat450119)  
+                                ^^[Github](https://github.com/chiefpat450119)""")
+                            print(f"Corrected a mistake in comment {comment.id}")
+                            comment.save()
+                            break
+except RedditAPIException as e:
+    print(e)
