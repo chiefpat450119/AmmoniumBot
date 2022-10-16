@@ -54,7 +54,7 @@ reddit = praw.Reddit(client_id=client_id,
                      username="ammonium_bot",
                      password=password)
 
-monitored_subreddits = ["askreddit", "memes", "dankmemes", "funny", "pics", "gaming", "aww", "videos", "worldnews", "news", "science", "technology", "gifs", "askscience", "tennis", "showerthoughts"]
+monitored_subreddits = ["askreddit", "memes", "dankmemes", "funny", "gaming", "videos", "worldnews", "news", "science", "technology", "gifs", "askscience", "tennis", "showerthoughts"]
 
 
 mistakes = [
