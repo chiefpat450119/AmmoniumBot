@@ -94,6 +94,7 @@ mistakes = [
     Mistake("epitamy", "epitome"),
     Mistake("no affect", "no effect", explanation="affect is a verb meaning to influence, while effect is a noun meaning a result."),
     Mistake("little affect", "little effect", explanation="affect is a verb meaning to influence, while effect is a noun meaning a result."),
+    Mistake("peaked my interest", "piqued my interest", explanation="Some people might have peaked in high school, but pique is a verb meaning to arouse interest."),
 ]
 
 
@@ -120,8 +121,7 @@ try:
                             comment.reply(body=f"""Did you mean to say \"{correction}\"?  
                                 Explanation: {explanation}  
                                 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
-                                ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.  
-                                ^^developed ^^by ^^[chiefpat450119](https://www.reddit.com/user/chiefpat450119)  
+                                ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
                                 ^^[Github](https://github.com/chiefpat450119)""")
                             print(f"Corrected a mistake in comment {comment.id}")
                             comment.save()
