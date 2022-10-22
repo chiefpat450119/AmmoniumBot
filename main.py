@@ -5,8 +5,10 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
-
+# The base class for mistakes
 class Mistake:
+
+    # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
         self.mistake = mistake
         self.correction = correction
@@ -15,36 +17,42 @@ class Mistake:
         self.after = after
         self.explanation = explanation
 
+    # Method to check if the comment is an exception
     def is_exception(self, text):
         if not self.exceptions:
             return False
         for exception in self.exceptions:
             return exception in text
 
+    # Method that checks for mistakes in comments and returns relevant corrections
     def check(self, text):
         mistake_string = self.before + self.mistake + self.after
         if mistake_string in text and not self.is_exception(text):
             return self.correction
         return None
 
+    # Returns the explanation
     def explain(self):
         if self.explanation:
             return self.explanation
         return "No explanation available."
 
 
+# There's so many variations of this mistake that I made a subclass for it
 class OfMistake(Mistake):
     def __init__(self, mistake, exceptions=None):
         super().__init__(mistake=mistake, correction=mistake + " have", exceptions=exceptions, before=" ", after=" of ")
         self.explanation = "You probably meant to say could've/should've/would've which sounds like 'of' but is actually short for 'have'."
 
 
+# Likewise for this one (these two are the most irritating as well)
 class LooseMistake(Mistake):
     def __init__(self, after, exceptions=None):
         super().__init__(mistake="loose", correction="lose", exceptions=exceptions, before=" ", after=after)
         self.explanation = "Loose is an adjective meaning the opposite of tight, while lose is a verb."
 
 
+# Reddit API Setup
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 password = os.environ.get("PASSWORD")
@@ -54,9 +62,11 @@ reddit = praw.Reddit(client_id=client_id,
                      username="ammonium_bot",
                      password=password)
 
+# List of subreddits monitored by the bot
 monitored_subreddits = ["askreddit", "atheism", "memes", "dankmemes", "funny", "gaming", "videos", "worldnews", "news", "science", "technology", "gifs", "clashofclans", "tennis", "showerthoughts"]
 
 
+# List of mistake instances that the bot iterates through
 mistakes = [
     Mistake("alot", "a lot", explanation="alot is not a word."),
     OfMistake("shouldn't"),
@@ -98,6 +108,7 @@ mistakes = [
 ]
 
 
+# Makes sure the comment author is not another bot
 def is_bot(comment):
     try:
         return "bot" in comment.author.name.lower()
@@ -106,6 +117,8 @@ def is_bot(comment):
 
 
 subreddit = reddit.subreddit(random.choice(monitored_subreddits))
+
+# Main bot loop
 try:
     for submission in subreddit.hot(limit=20):
         if not submission.locked:
