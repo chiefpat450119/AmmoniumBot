@@ -5,9 +5,9 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
+
 # The base class for mistakes
 class Mistake:
-
     # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
         self.mistake = mistake
@@ -58,7 +58,7 @@ client_secret = os.environ.get("CLIENT_SECRET")
 password = os.environ.get("PASSWORD")
 reddit = praw.Reddit(client_id=client_id,
                      client_secret=client_secret,
-                     user_agent="console:ammonium_bot:v1.0.0 (by /u/chiefpat450119)",
+                     user_agent="console:ammonium_bot:v1.0.0 (by /u/anonymous)",
                      username="ammonium_bot",
                      password=password)
 
@@ -75,10 +75,10 @@ mistakes = [
     OfMistake("should"),
     OfMistake("would"),
     OfMistake("could"),
-    Mistake("to many", "too many", before="way "),
-    Mistake("to many", "too many", before="far "),
-    Mistake("to little", "too little", before="way "),
-    Mistake("to little", "too little", before="far "),
+    Mistake("to many", "too many", before=" way "),
+    Mistake("to many", "too many", before=" far "),
+    Mistake("to little", "too little", before=" way "),
+    Mistake("to little", "too little", before=" far "),
     Mistake("to few", "too few"),
     Mistake("to much", "too much", exceptions=["much of", "similar"]),
     Mistake("more then", "more than", exceptions=["any more"]),
@@ -137,7 +137,20 @@ try:
                                 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
                                 ^^[Github](https://github.com/chiefpat450119)""")
                             print(f"Corrected a mistake in comment {comment.id}")
+
+                            # Save the comment so the bot doesn't reply to it again
                             comment.save()
+
                             break
+
 except RedditAPIException as e:
     print(e)
+
+# Automated reply
+for message in reddit.inbox.unread():
+    if "good bot" in message.body.lower():
+        message.reply(body="Thank you!")
+        message.mark_read()
+    elif "bad bot" in message.body.lower():
+        message.reply(body="Hey, that hurt my feelings :(")
+        message.mark_read()
