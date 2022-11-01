@@ -136,7 +136,7 @@ try:
                                 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
                                 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
                                 ^^[Github](https://github.com/chiefpat450119)""")
-                            print(f"Corrected a mistake in comment {comment.id}")
+                            print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
                             # Save the comment so the bot doesn't reply to it again
                             comment.save()
