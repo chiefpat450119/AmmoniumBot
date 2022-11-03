@@ -4,6 +4,7 @@ import random
 import os
 
 # TODO: Add links for Paypal or Patreon
+# TODO: Add quote block at the top of the reply
 
 
 # The base class for mistakes
@@ -124,7 +125,7 @@ try:
         if not submission.locked:
             submission.comments.replace_more(limit=None)
             for comment in submission.comments.list():
-                print(f"Checking comment {comment.id}")
+                print(f"Checking comment {comment.id} in {subreddit.display_name}")
                 if not comment.saved and not is_bot(comment):
                     for mistake in mistakes:
                         correction = mistake.check(comment.body.lower())
