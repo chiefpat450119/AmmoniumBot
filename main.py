@@ -146,7 +146,7 @@ try:
 
                         if correction:
                             explanation = mistake.explain()
-                            context = mistake.context(comment.body.lower())
+                            context = mistake.find_context(comment.body.lower())
                             comment.reply(body=f"""> {context}  
                                 Did you mean to say \"{correction}\"?  
                                 Explanation: {explanation}  
