@@ -4,7 +4,6 @@ import random
 import os
 
 # TODO: Add links for Paypal or Patreon
-# TODO: Add quote block at the top of the reply
 
 
 # The base class for mistakes
@@ -31,6 +30,18 @@ class Mistake:
         if mistake_string in text and not self.is_exception(text):
             return self.correction
         return None
+
+    # Methods that returns the context of the mistake in the comment
+    def find_context(self, text):
+        mistake_string = self.before + self.mistake + self.after
+        # Find the index of the mistake
+        index = text.find(mistake_string)
+        # Find the index of the first space before the mistake
+        first_space = text.rfind(" ", 0, index-1)
+        # Find the index of the first space after the mistake
+        second_space = text.find(" ", index + len(mistake_string)+1)
+        # Return the context
+        return text[first_space:second_space]
 
     # Returns the explanation
     def explain(self):
@@ -135,7 +146,9 @@ try:
 
                         if correction:
                             explanation = mistake.explain()
-                            comment.reply(body=f"""Did you mean to say \"{correction}\"?  
+                            context = mistake.context(comment.body.lower())
+                            comment.reply(body=f"""> {context}  
+                                Did you mean to say \"{correction}\"?  
                                 Explanation: {explanation}  
                                 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
                                 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
