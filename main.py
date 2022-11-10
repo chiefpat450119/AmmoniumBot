@@ -44,6 +44,8 @@ class OfMistake(Mistake):
     def __init__(self, mistake, exceptions=None):
         super().__init__(mistake=mistake, correction=mistake + " have", exceptions=exceptions, before=" ", after=" of ")
         self.explanation = "You probably meant to say could've/should've/would've which sounds like 'of' but is actually short for 'have'."
+        if not exceptions:
+            self.exceptions = ["of course"]
 
 
 # Likewise for this one (these two are the most irritating as well)
