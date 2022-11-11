@@ -147,12 +147,14 @@ try:
                         if correction:
                             explanation = mistake.explain()
                             context = mistake.find_context(comment.body.lower())
-                            comment.reply(body=f"""> {context}  
-                                Did you mean to say \"{correction}\"?  
-                                Explanation: {explanation}  
-                                ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
-                                ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
-                                ^^[Github](https://github.com/chiefpat450119)""")
+                            comment.reply(body=f"""
+> {context}  
+
+Did you mean to say \"{correction}\"?  
+Explanation: {explanation}  
+^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
+^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
+^^[Github](https://github.com/chiefpat450119)""")
                             print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
                             # Save the comment so the bot doesn't reply to it again
