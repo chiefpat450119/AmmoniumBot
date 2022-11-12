@@ -5,7 +5,6 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
-
 # The base class for mistakes
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
@@ -37,9 +36,13 @@ class Mistake:
         # Find the index of the mistake
         index = text.find(mistake_string)
         # Find the index of the first space before the mistake
-        first_space = text.rfind(" ", 0, index-1)
+        first_space = text.rfind(" ", 0, index)
         # Find the index of the first space after the mistake
-        second_space = text.find(" ", index + len(mistake_string)+1)
+        second_space = text.find(" ", index + len(mistake_string))
+        if first_space == -1:
+            first_space = 0
+        if second_space == -1:
+            second_space = len(text)
         # Return the context
         return text[first_space:second_space]
 
