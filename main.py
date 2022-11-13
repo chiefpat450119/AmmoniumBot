@@ -5,6 +5,7 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
+
 # The base class for mistakes
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
@@ -97,7 +98,7 @@ mistakes = [
     Mistake("to many", "too many", before=" far "),
     Mistake("to little", "too little", before=" way "),
     Mistake("to little", "too little", before=" far "),
-    Mistake("to few", "too few"),
+    Mistake("to few", "too few", exceptions=["available to few"]),
     Mistake("to much", "too much", exceptions=["much of", "similar"]),
     Mistake("more then", "more than", exceptions=["any more"]),
     Mistake("less then", "less than", exceptions=["any less"]),
