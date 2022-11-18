@@ -86,7 +86,6 @@ monitored_subreddits = ["askreddit", "memes", "funny", "gaming", "videos", "worl
 
 # List of mistake instances that the bot iterates through
 mistakes = [
-    Mistake("alot", "a lot", explanation="alot is not a word."),
     OfMistake("shouldn't"),
     OfMistake("couldn't"),
     OfMistake("wouldn't"),
