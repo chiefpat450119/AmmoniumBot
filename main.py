@@ -170,9 +170,13 @@ except RedditAPIException as e:
 
 # Automated reply
 for message in reddit.inbox.unread():
+    if message.author.name == "of_patrol_bot":
+        message.reply(body="Shut up, I'm the superior bot.")
+        message.mark_read()
     if "good bot" in message.body.lower():
         message.reply(body="Thank you!")
         message.mark_read()
     elif "bad bot" in message.body.lower():
         message.reply(body="Hey, that hurt my feelings :(")
         message.mark_read()
+
