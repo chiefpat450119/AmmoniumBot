@@ -93,6 +93,7 @@ mistakes = [
     OfMistake("would"),
     OfMistake("could"),
     OfMistake("must"),
+    OfMistake("might"),
     Mistake("to many", "too many", before=" way "),
     Mistake("to many", "too many", before=" far "),
     Mistake("to little", "too little", before=" way "),
