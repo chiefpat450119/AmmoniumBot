@@ -1,4 +1,5 @@
 import praw
+from prawcore.exceptions import Forbidden
 from praw.exceptions import RedditAPIException
 import random
 import os
@@ -99,7 +100,7 @@ mistakes = [
     Mistake("to little", "too little", before=" way "),
     Mistake("to little", "too little", before=" far "),
     Mistake("to few", "too few", exceptions=["available to few"]),
-    Mistake("to much", "too much", exceptions=["much of", "similar"]),
+    Mistake("to much", "too much", exceptions=["open to", "much of", "similar"]),
     Mistake("more then", "more than", exceptions=["any more"]),
     Mistake("less then", "less than", exceptions=["any less"]),
     Mistake("payed", "paid", explanation="Payed means to seal something with wax, while paid means to give money."),
@@ -169,12 +170,19 @@ Explanation: {explanation}
 except RedditAPIException as e:
     print(e)
 
+
 # Automated reply
 for message in reddit.inbox.unread():
     if "good bot" in message.body.lower():
-        message.reply(body="Thank you!")
         message.mark_read()
-    elif "bad bot" in message.body.lower():
-        message.reply(body="Hey, that hurt my feelings :(")
-        message.mark_read()
+        try:
+            message.reply(body="Thank you!")
+        except Forbidden:
+            pass
 
+    elif "bad bot" in message.body.lower():
+        message.mark_read()
+        try:
+            message.reply(body="Hey, that hurt my feelings :(")
+        except Forbidden:
+            pass
