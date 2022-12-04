@@ -166,23 +166,21 @@ Explanation: {explanation}
                             comment.save()
 
                             break
+    # Automated reply
+    for message in reddit.inbox.unread():
+        if "good bot" in message.body.lower():
+            message.mark_read()
+            try:
+                message.reply(body="Thank you!")
+            except Forbidden:
+                pass
+
+        elif "bad bot" in message.body.lower():
+            message.mark_read()
+            try:
+                message.reply(body="Hey, that hurt my feelings :(")
+            except Forbidden:
+                pass
 
 except RedditAPIException as e:
     print(e)
-
-
-# Automated reply
-for message in reddit.inbox.unread():
-    if "good bot" in message.body.lower():
-        message.mark_read()
-        try:
-            message.reply(body="Thank you!")
-        except Forbidden:
-            pass
-
-    elif "bad bot" in message.body.lower():
-        message.mark_read()
-        try:
-            message.reply(body="Hey, that hurt my feelings :(")
-        except Forbidden:
-            pass
