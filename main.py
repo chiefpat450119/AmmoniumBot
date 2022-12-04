@@ -166,6 +166,7 @@ Explanation: {explanation}
                             comment.save()
 
                             break
+
     # Automated reply
     for message in reddit.inbox.unread():
         if "good bot" in message.body.lower():
