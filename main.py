@@ -7,8 +7,13 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
+# Get counter from file
+def get_counter():
+    with open("counter.txt", "r") as file:
+        counter = int(file.read())
+    return counter
 
-# The base class for mistakes
+
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
@@ -163,6 +168,7 @@ try:
 
 Did you mean to say \"{correction}\"?  
 Explanation: {explanation}  
+Total mistakes found: {get_counter()}  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
 ^^[Github](https://github.com/chiefpat450119)""")
