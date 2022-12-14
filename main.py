@@ -4,6 +4,7 @@ from praw.exceptions import RedditAPIException
 import random
 import os
 
+
 # TODO: Add links for Paypal or Patreon
 
 
@@ -29,6 +30,11 @@ class Mistake:
     def check(self, text):
         mistake_string = self.before + self.mistake + self.after
         if mistake_string in text and not self.is_exception(text):
+            # Update counter file
+            with open("counter.txt", "r") as file:
+                counter = int(file.read())
+            with open("counter.txt", "w") as file:
+                file.write(str(counter + 1))
             return self.correction
         return None
 
