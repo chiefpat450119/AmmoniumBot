@@ -23,6 +23,7 @@ def update_runs():
     with open("total_runs.txt", "w") as file:
         file.write(str(runs))
 
+
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
@@ -206,3 +207,5 @@ Total mistakes found: {get_counter()}
 
 except RedditAPIException as e:
     print(e)
+
+update_runs()
