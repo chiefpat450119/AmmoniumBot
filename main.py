@@ -7,12 +7,21 @@ import os
 
 # TODO: Add links for Paypal or Patreon
 
+
 # Get counter from file
 def get_counter():
     with open("counter.txt", "r") as file:
         counter = int(file.read())
     return counter
 
+
+# Update total_runs.txt
+def update_runs():
+    with open("total_runs.txt", "r") as file:
+        runs = int(file.read())
+    runs += 1
+    with open("total_runs.txt", "w") as file:
+        file.write(str(runs))
 
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
