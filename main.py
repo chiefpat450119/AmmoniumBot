@@ -15,7 +15,7 @@ def get_counter():
     return counter
 
 
-# Update total_runs.txt
+# Update total_runs.txt in case there's no change in counter so no error is thrown
 def update_runs():
     with open("total_runs.txt", "r") as file:
         runs = int(file.read())
@@ -24,6 +24,7 @@ def update_runs():
         file.write(str(runs))
 
 
+# Base mistake class
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
@@ -157,6 +158,7 @@ def is_bot(comment):
         return True
 
 
+# Randomly choose a subreddit
 subreddit = reddit.subreddit(random.choice(monitored_subreddits))
 
 # Main bot loop
@@ -208,4 +210,5 @@ Total mistakes found: {get_counter()}
 except RedditAPIException as e:
     print(e)
 
+# Increment total run counter
 update_runs()
