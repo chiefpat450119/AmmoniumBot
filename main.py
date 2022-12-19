@@ -148,6 +148,12 @@ mistakes = [
     Mistake("no affect", "no effect", explanation="affect is a verb meaning to influence, while effect is a noun meaning a result."),
     Mistake("little affect", "little effect", explanation="affect is a verb meaning to influence, while effect is a noun meaning a result."),
     Mistake("peaked my interest", "piqued my interest", explanation="Some people might have peaked in high school, but pique is a verb meaning to arouse interest."),
+    Mistake("peaked my curiosity", "piqued my curiosity", explanation="Some people might have peaked in high school, but pique is a verb meaning to arouse interest."),
+    Mistake("on accident", "by accident"),
+    Mistake("by purpose", "on purpose"),
+    Mistake("apart of", "a part of", explanation="apart is an adverb meaning separately, while a part is a noun meaning a portion."),
+    Mistake("apart from", "a part from", explanation="apart is an adverb meaning separately, while a part is a noun meaning a portion."),
+    Mistake("queue", "cue", after=" the ", explanation="queue is a line, while cue is a signal."),
 ]
 
 
@@ -190,6 +196,7 @@ Total mistakes found: {get_counter()}
                             # Save the comment so the bot doesn't reply to it again
                             comment.save()
 
+                            # Stop looping through mistakes if one is found
                             break
 
     # Automated reply
