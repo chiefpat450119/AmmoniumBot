@@ -105,7 +105,7 @@ reddit = praw.Reddit(client_id=client_id,
                      password=password)
 
 # List of subreddits monitored by the bot
-monitored_subreddits = ["memes", "funny", "gaming", "videos", "worldnews", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "gadgets", "philosophy", "travel", "philosophy", "malefashionadvice", "femalefashionadvice", "fitness", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon"]
+monitored_subreddits = ["memes", "gaming", "videos", "worldnews", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "gadgets", "philosophy", "travel", "philosophy", "femalefashionadvice", "fitness", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon"]
 
 
 # List of mistake instances that the bot iterates through
