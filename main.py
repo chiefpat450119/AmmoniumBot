@@ -6,8 +6,6 @@ import os
 
 # Script will run every 3 hours
 
-# TODO: Add links for Paypal or Patreon
-
 
 # Get counter from file
 def get_counter():
@@ -189,7 +187,8 @@ Explanation: {explanation}
 Total mistakes found: {get_counter()}  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
-^^[Github](https://github.com/chiefpat450119)""")
+^^[Github](https://github.com/chiefpat450119)  
+^^[Patron](https://www.patreon.com/chiefpat450119)""")
                             print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
                             # Save the comment so the bot doesn't reply to it again
