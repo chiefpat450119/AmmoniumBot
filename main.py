@@ -151,6 +151,7 @@ mistakes = [
     Mistake("by purpose", "on purpose"),
     Mistake("apart of", "a part of", explanation="apart is an adverb meaning separately, while a part is a noun meaning a portion."),
     Mistake("queue", "cue", after=" the ", explanation="queue is a line, while cue is a signal."),
+    Mistake("humanely possible", "humanly possible", explanation="humane means kind, while human means relating to humans."),
 ]
 
 
