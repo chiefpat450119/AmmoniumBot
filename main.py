@@ -5,7 +5,7 @@ import random
 import os
 
 # Script will run every 3 hours
-
+# TODO: Expand monitoring to more subreddits
 
 # Get counter from file
 def get_counter():
