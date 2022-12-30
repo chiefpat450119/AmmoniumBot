@@ -7,6 +7,7 @@ import os
 # Script will run every 3 hours
 # TODO: Expand monitoring to more subreddits
 
+
 # Get counter from file
 def get_counter():
     with open("counter.txt", "r") as file:
@@ -202,6 +203,7 @@ Total mistakes found: {get_counter()}
     for message in reddit.inbox.unread():
         if "good bot" in message.body.lower():
             message.mark_read()
+            # Send a reply, catch the error if banned or blocked
             try:
                 message.reply(body="Thank you!")
             except Forbidden:
@@ -209,13 +211,15 @@ Total mistakes found: {get_counter()}
 
         elif "bad bot" in message.body.lower():
             message.mark_read()
+            # Send a reply, catch the error if banned or blocked
             try:
                 message.reply(body="Hey, that hurt my feelings :(")
             except Forbidden:
                 pass
 
+# Catch rate limits
 except RedditAPIException as e:
     print(e)
 
-# Increment total run counter
+# Increment total run counter to prevent empty commit
 update_runs()
