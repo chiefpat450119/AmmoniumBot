@@ -1,11 +1,9 @@
 import praw
 from prawcore.exceptions import Forbidden
 from praw.exceptions import RedditAPIException
-import random
 import os
 
-# Script will run every 3 hours
-# TODO: Expand monitoring to more subreddits
+# Script will run every 3 hours and go through every subreddit in the list
 
 
 # Get counter from file
@@ -164,26 +162,24 @@ def is_bot(comment):
         return True
 
 
-# Randomly choose a subreddit
-subreddit = reddit.subreddit(random.choice(monitored_subreddits))
-
 # Main bot loop
 try:
-    for submission in subreddit.hot(limit=20):
-        if not submission.locked:
-            submission.comments.replace_more(limit=None)
-            for comment in submission.comments.list():
-                print(f"Checking comment {comment.id} in {subreddit.display_name}")
-                if not comment.saved and not is_bot(comment):
-                    for mistake in mistakes:
-                        correction = mistake.check(comment.body.lower())
+    for subreddit in monitored_subreddits:
+        for submission in subreddit.hot(limit=20):
+            if not submission.locked:
+                submission.comments.replace_more(limit=None)
+                for comment in submission.comments.list():
+                    print(f"Checking comment {comment.id} in {subreddit.display_name}")
+                    if not comment.saved and not is_bot(comment):
+                        for mistake in mistakes:
+                            correction = mistake.check(comment.body.lower())
 
-                        if correction:
-                            explanation = mistake.explain()
-                            context = mistake.find_context(comment.body.lower())
-                            comment.reply(body=f"""
+                            if correction:
+                                explanation = mistake.explain()
+                                context = mistake.find_context(comment.body.lower())
+                                comment.reply(body=f"""
 > {context}  
-
+    
 Did you mean to say \"{correction}\"?  
 Explanation: {explanation}  
 Total mistakes found: {get_counter()}  
@@ -191,13 +187,14 @@ Total mistakes found: {get_counter()}
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
 ^^[Github](https://github.com/chiefpat450119)  
 ^^[Patreon](https://www.patreon.com/chiefpat450119)""")
-                            print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
-                            # Save the comment so the bot doesn't reply to it again
-                            comment.save()
+                                print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
-                            # Stop looping through mistakes if one is found
-                            break
+                                # Save the comment so the bot doesn't reply to it again
+                                comment.save()
+
+                                # Stop looping through mistakes if one is found
+                                break
 
     # Automated reply
     for message in reddit.inbox.unread():
