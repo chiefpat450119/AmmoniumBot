@@ -121,7 +121,7 @@ mistakes = [
     Mistake("to little", "too little", before=" far "),
     Mistake("to few", "too few", exceptions=["available to few"]),
     Mistake("to much", "too much", exceptions=["open to", "much of", "similar"]),
-    Mistake("more then", "more than", exceptions=["any more"]),
+    Mistake("more then", "more than", exceptions=["any more", "some more"]),
     Mistake("less then", "less than", exceptions=["any less"]),
     Mistake("payed", "paid", explanation="Payed means to seal something with wax, while paid means to give money."),
     LooseMistake(" my "),
