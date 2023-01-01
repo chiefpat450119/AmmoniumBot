@@ -164,7 +164,8 @@ def is_bot(comment):
 
 # Main bot loop
 try:
-    for subreddit in monitored_subreddits:
+    for subreddit_name in monitored_subreddits:
+        subreddit = reddit.subreddit(subreddit_name)
         for submission in subreddit.hot(limit=20):
             if not submission.locked:
                 submission.comments.replace_more(limit=None)
