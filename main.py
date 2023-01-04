@@ -37,8 +37,8 @@ class Mistake:
     def is_exception(self, text):
         if not self.exceptions:
             return False
-        for exception in self.exceptions:
-            return exception in text
+        exceptions_found = [exception in text for exception in self.exceptions]
+        return any(exceptions_found)
 
     # Method that checks for mistakes in comments and returns relevant corrections
     def check(self, text):
