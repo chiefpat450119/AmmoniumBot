@@ -2,6 +2,7 @@ import praw
 from prawcore.exceptions import Forbidden
 from praw.exceptions import RedditAPIException
 import os
+import random
 
 # Script will run every 3 hours and go through every subreddit in the list
 
@@ -104,6 +105,8 @@ reddit = praw.Reddit(client_id=client_id,
 # List of subreddits monitored by the bot
 monitored_subreddits = ["memes", "gaming", "worldnews", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "philosophy", "travel", "philosophy", "femalefashionadvice", "fitness", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon"]
 
+# Starts from a different subreddit each time in case of ratelimit
+random.shuffle(monitored_subreddits)
 
 # List of mistake instances that the bot iterates through
 mistakes = [
