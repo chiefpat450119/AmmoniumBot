@@ -103,7 +103,7 @@ reddit = praw.Reddit(client_id=client_id,
                      password=password)
 
 # List of subreddits monitored by the bot
-monitored_subreddits = ["memes", "gaming", "worldnews", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "philosophy", "travel", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon"]
+monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "philosophy", "travel", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
 
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
@@ -123,7 +123,7 @@ mistakes = [
     Mistake("to little", "too little", before=" way "),
     Mistake("to little", "too little", before=" far "),
     Mistake("to few", "too few", exceptions=["available to few"]),
-    Mistake("to much", "too much", exceptions=["open to", "much of", "similar"]),
+    Mistake("to much", "too much", before=" way "),
     Mistake("more then", "more than", exceptions=["any more", "some more"]),
     Mistake("less then", "less than", exceptions=["any less"]),
     Mistake("payed", "paid", explanation="Payed means to seal something with wax, while paid means to give money."),
