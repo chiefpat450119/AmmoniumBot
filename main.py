@@ -103,7 +103,7 @@ reddit = praw.Reddit(client_id=client_id,
                      password=password)
 
 # List of subreddits monitored by the bot
-monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "philosophy", "travel", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
+monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space", "history", "earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
 
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
