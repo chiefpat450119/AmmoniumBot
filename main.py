@@ -103,7 +103,7 @@ reddit = praw.Reddit(client_id=client_id,
                      password=password)
 
 # List of subreddits monitored by the bot
-monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts", "space","earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
+monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts","earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
 
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
@@ -151,7 +151,7 @@ mistakes = [
     Mistake("peaked my curiosity", "piqued my curiosity", explanation="Some people might have peaked in high school, but pique is a verb meaning to arouse interest."),
     Mistake("on accident", "by accident"),
     Mistake("by purpose", "on purpose"),
-    Mistake("apart of", "a part of", explanation="apart is an adverb meaning separately, while a part is a noun meaning a portion."),
+    Mistake("apart of", "a part of", explanation="\"apart\" is an adverb meaning separately, while \"a part\" is a noun meaning a portion."),
     Mistake("queue", "cue", after=" the ", explanation="queue is a line, while cue is a signal."),
     Mistake("humanely possible", "humanly possible", explanation="humane means kind, while human means relating to humans."),
 ]
