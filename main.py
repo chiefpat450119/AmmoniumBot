@@ -102,9 +102,15 @@ reddit = praw.Reddit(client_id=client_id,
                      username="ammonium_bot",
                      password=password)
 
+
+# Read banned subreddits
+with open("banned_subreddits.txt", "r") as file:
+    banned_subreddits = file.read().splitlines()
+
+
 # List of subreddits monitored by the bot
 monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts","earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
-
+monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit not in banned_subreddits]
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
 
@@ -189,8 +195,7 @@ Explanation: {explanation}
 Total mistakes found: {get_counter()}  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
-^^[Github](https://github.com/chiefpat450119)  
-^^[Patreon](https://www.patreon.com/chiefpat450119)""")
+^^[Github](https://github.com/chiefpat450119)""")
 
                                 print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
@@ -215,6 +220,19 @@ Total mistakes found: {get_counter()}
             # Send a reply, catch the error if banned or blocked
             try:
                 message.reply(body="Hey, that hurt my feelings :(")
+            except Forbidden:
+                pass
+
+    # Detect subreddit bans
+    for message in reddit.inbox.unread():
+        if "banned from participating" in message.subject.lower():
+            message.mark_read()
+            # Add to list of banned subreddits
+            with open("banned_subreddits.txt", "a") as ban_list:
+                ban_list.write(f"{message.subreddit.display_name}")
+            # Send a reply, catch the error if banned or blocked
+            try:
+                message.reply(body="Sorry, I'll stop trying to post here.")
             except Forbidden:
                 pass
 
