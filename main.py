@@ -102,9 +102,21 @@ reddit = praw.Reddit(client_id=client_id,
                      username="ammonium_bot",
                      password=password)
 
+# Detect subreddit bans
+for message in reddit.inbox.unread():
+    if "banned from participating" in message.subject.lower():
+        message.mark_read()
+        # Add to list of banned subreddits
+        with open("banned_subs.txt", "a") as ban_list:
+            ban_list.write(f"{message.subreddit.display_name}")
+        # Send a reply, catch the error if banned or blocked
+        try:
+            message.reply(body="Sorry, I'll stop trying to post here.")
+        except Forbidden:
+            pass
 
 # Read banned subreddits
-with open("banned_subreddits.txt", "r") as file:
+with open("banned_subs.txt", "r") as file:
     banned_subreddits = file.read().splitlines()
 
 
@@ -220,19 +232,6 @@ Total mistakes found: {get_counter()}
             # Send a reply, catch the error if banned or blocked
             try:
                 message.reply(body="Hey, that hurt my feelings :(")
-            except Forbidden:
-                pass
-
-    # Detect subreddit bans
-    for message in reddit.inbox.unread():
-        if "banned from participating" in message.subject.lower():
-            message.mark_read()
-            # Add to list of banned subreddits
-            with open("banned_subreddits.txt", "a") as ban_list:
-                ban_list.write(f"{message.subreddit.display_name}")
-            # Send a reply, catch the error if banned or blocked
-            try:
-                message.reply(body="Sorry, I'll stop trying to post here.")
             except Forbidden:
                 pass
 
