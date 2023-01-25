@@ -108,7 +108,7 @@ for message in reddit.inbox.unread():
         message.mark_read()
         # Add to list of banned subreddits
         with open("banned_subs.txt", "a") as file:
-            file.write(message.subreddit.display_name + "\n")
+            file.write(message.subreddit.display_name.lower() + "\n")
         # Send a reply, catch the error if banned or blocked
         try:
             message.reply(body="Sorry, I'll stop trying to post here.")
@@ -122,7 +122,7 @@ with open("banned_subs.txt", "r") as file:
 
 # List of subreddits monitored by the bot
 monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts","earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
-monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit not in banned_subreddits]
+monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit.lower() not in banned_subreddits]
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
 
