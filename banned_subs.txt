@@ -17,4 +17,5 @@ fitness
 worldnews
 travel
 history
-spaceModernWarfareII
+space
+ModernWarfareII

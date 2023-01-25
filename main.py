@@ -107,8 +107,8 @@ for message in reddit.inbox.unread():
     if "banned from participating" in message.subject.lower():
         message.mark_read()
         # Add to list of banned subreddits
-        with open("banned_subs.txt", "a") as ban_list:
-            ban_list.write(f"{message.subreddit.display_name}")
+        with open("banned_subs.txt", "a") as file:
+            file.write(message.subreddit.display_name + "\n")
         # Send a reply, catch the error if banned or blocked
         try:
             message.reply(body="Sorry, I'll stop trying to post here.")
