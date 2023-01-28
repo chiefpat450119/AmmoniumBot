@@ -121,7 +121,28 @@ with open("banned_subs.txt", "r") as file:
 
 
 # List of subreddits monitored by the bot
-monitored_subreddits = ["memes", "gaming", "science", "gifs", "clashroyale", "tennis", "showerthoughts","earthporn", "philosophy", "philosophy", "femalefashionadvice", "oddlysatisfying", "therewasanattempt", "modernwarfareII", "horizon", "football", "soccer"]
+monitored_subreddits = [
+    "memes",
+    "gaming",
+    "science",
+    "gifs",
+    "clashroyale",
+    "tennis",
+    "showerthoughts",
+    "earthporn",
+    "philosophy",
+    "femalefashionadvice",
+    "oddlysatisfying",
+    "therewasanattempt",
+    "modernwarfareII",
+    "horizon",
+    "football",
+    "soccer",
+    "politics",
+    "sports",
+    "brawlstars",
+    "wholesomememes"]
+
 monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit.lower() not in banned_subreddits]
 # Starts from a different subreddit each time in case of ratelimit
 random.shuffle(monitored_subreddits)
