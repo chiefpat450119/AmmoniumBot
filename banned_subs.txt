@@ -21,3 +21,5 @@ space
 modernwarfareii
 soccer
 philosophy
+politics
+philosophy
