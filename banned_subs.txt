@@ -20,3 +20,4 @@ history
 space
 modernwarfareii
 soccer
+philosophy
