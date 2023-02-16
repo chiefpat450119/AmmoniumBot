@@ -121,27 +121,8 @@ with open("banned_subs.txt", "r") as file:
 
 
 # List of subreddits monitored by the bot
-monitored_subreddits = [
-    "memes",
-    "gaming",
-    "science",
-    "gifs",
-    "clashroyale",
-    "tennis",
-    "showerthoughts",
-    "earthporn",
-    "philosophy",
-    "femalefashionadvice",
-    "oddlysatisfying",
-    "therewasanattempt",
-    "modernwarfareII",
-    "horizon",
-    "football",
-    "soccer",
-    "politics",
-    "sports",
-    "brawlstars",
-    "wholesomememes"]
+with open("monitored_subs.txt", "r") as file:
+    monitored_subreddits = file.read().splitlines()
 
 monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit.lower() not in banned_subreddits]
 # Starts from a different subreddit each time in case of ratelimit
@@ -255,6 +236,18 @@ Total mistakes found: {get_counter()}
                 message.reply(body="Hey, that hurt my feelings :(")
             except Forbidden:
                 pass
+
+    # Auto reply to bots
+    for comment in reddit.inbox.unread():
+        # Check if the username is accessible
+        try:
+            if "bot" in comment.author.name.lower():
+                comment.reply(body="This is the superior bot.")
+                comment.mark_read()
+        except AttributeError:
+            pass
+        except Forbidden:
+            pass
 
 # Catch rate limits
 except RedditAPIException as e:
