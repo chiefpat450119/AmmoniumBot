@@ -85,7 +85,7 @@ class OfMistake(Mistake):
             self.exceptions = ["of course"]
 
 
-# Likewise for this one (these two are the most irritating as well)
+# Likewise for this one
 class LooseMistake(Mistake):
     def __init__(self, after, exceptions=None):
         super().__init__(mistake="loose", correction="lose", exceptions=exceptions, before=" ", after=after)
@@ -102,18 +102,14 @@ reddit = praw.Reddit(client_id=client_id,
                      username="ammonium_bot",
                      password=password)
 
-# Detect subreddit bans
+# Detect subreddit bans and add to file
 for message in reddit.inbox.unread():
     if "banned from participating" in message.subject.lower():
         message.mark_read()
         # Add to list of banned subreddits
         with open("banned_subs.txt", "a") as file:
             file.write(message.subreddit.display_name.lower() + "\n")
-        # Send a reply, catch the error if banned or blocked
-        try:
-            message.reply(body="Sorry, I'll stop trying to post here.")
-        except Forbidden:
-            pass
+
 
 # Read banned subreddits
 with open("banned_subs.txt", "r") as file:
@@ -221,37 +217,32 @@ Total mistakes found: {get_counter()}
 
     # Automated reply
     for message in reddit.inbox.unread():
+        # Check if the username is accessible
+        try:
+            # Auto reply to bots
+            if "bot" in message.author.name.lower():
+                message.reply(body="This is the superior bot.")
+                message.mark_read()
+        except AttributeError:
+            pass
+
         if "good bot" in message.body.lower():
             message.mark_read()
-            # Send a reply, catch the error if banned or blocked
-            try:
-                message.reply(body="Thank you!")
-            except Forbidden:
-                pass
+            # Send a reply
+            message.reply(body="Thank you!")
 
         elif "bad bot" in message.body.lower():
             message.mark_read()
-            # Send a reply, catch the error if banned or blocked
-            try:
-                message.reply(body="Hey, that hurt my feelings :(")
-            except Forbidden:
-                pass
+            # Send a reply
+            message.reply(body="Hey, that hurt my feelings :(")
 
-    # Auto reply to bots
-    for comment in reddit.inbox.unread():
-        # Check if the username is accessible
-        try:
-            if "bot" in comment.author.name.lower():
-                comment.reply(body="This is the superior bot.")
-                comment.mark_read()
-        except AttributeError:
-            pass
-        except Forbidden:
-            pass
 
 # Catch rate limits
 except RedditAPIException as e:
     print(e)
+# If banned or otherwise unable to comment or reply, just ignore it
+except Forbidden:
+    pass
 
 # Increment total run counter to prevent empty commit
 update_runs()
