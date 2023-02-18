@@ -50,3 +50,5 @@ formula1
 pokemon
 mildlyinteresting
 games
+minecraft
+tumblr
