@@ -191,7 +191,7 @@ mistakes = [
             explanation="Some people might have peaked in high school, "
                         "but pique is a verb meaning to arouse interest."),
     Mistake("on accident", "by accident",
-            explanation="\"On accident\" is sometimes accepted in American informal speech,"
+            explanation="\"On accident\" is sometimes accepted in American informal speech, "
                         "but 'by accident' is the more common and correct form. "
                         "[Detailed explanation](https://writingexplained.org/on-accident-or-by-accident)"),
     Mistake("by purpose", "on purpose"),
