@@ -172,7 +172,7 @@ mistakes = [
             explanation="This is likely due to mishearing of 'intents and purposes'."),
     Mistake("sneak peak", "sneak peek",
             explanation="peak is the top of a mountain, while peek is a quick look."),
-    Mistake("sneak peeks", "sneak peek",
+    Mistake("sneak peaks", "sneak peek",
             explanation="peak is the top of a mountain, while peek is a quick look."),
     Mistake("unphased", "unfazed",
             explanation="Phased means to change, while fazed means to be surprised."),
