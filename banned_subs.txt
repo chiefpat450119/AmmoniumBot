@@ -58,3 +58,4 @@ food
 leagueoflegends
 foodporn
 explainlikeimfive
+magictcg
