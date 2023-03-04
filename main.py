@@ -133,15 +133,17 @@ mistakes = [
     OfMistake("would"),
     OfMistake("could"),
     OfMistake("must"),
-    OfMistake("might", exceptions=["the might of", "might of course"]),
+    OfMistake("might", exceptions=["the might of", "might of course", "might of the"]),
     Mistake("to many", "too many", before=" way "),
     Mistake("to many", "too many", before=" far "),
     Mistake("to little", "too little", before=" way "),
     Mistake("to little", "too little", before=" far "),
     Mistake("to few", "too few", exceptions=["available to few"]),
     Mistake("to much", "too much", before=" way "),
-    Mistake("more then", "more than", exceptions=["any more", "some more"]),
-    Mistake("less then", "less than", exceptions=["any less"]),
+    Mistake("more then", "more than", exceptions=["any more", "some more"],
+            explanation="If you didn't mean 'more than' you might have forgotten a comma."),
+    Mistake("less then", "less than", exceptions=["any less"],
+            explanation="If you didn't mean 'less than' you might have forgotten a comma."),
     Mistake("payed", "paid",
             explanation="Payed means to seal something with wax, "
                         "while paid means to give money."),
@@ -155,7 +157,7 @@ mistakes = [
     Mistake("could care less", "couldn't care less",
             exceptions=["couldn't care less*", "couldn't*", "did you mean"],
             explanation="If you could care less, you do care, "
-                        "which is the opposite of what you're trying to say."),
+                        "which is the opposite of what you meant to say."),
     Mistake("loosing", "losing",
             explanation="Loose is an adjective meaning the opposite of tight, "
                         "while lose is a verb."),
@@ -190,10 +192,6 @@ mistakes = [
     Mistake("peaked my curiosity", "piqued my curiosity",
             explanation="Some people might have peaked in high school, "
                         "but pique is a verb meaning to arouse interest."),
-    Mistake("on accident", "by accident",
-            explanation="\"On accident\" is sometimes accepted in American informal speech, "
-                        "but 'by accident' is the more common and correct form. "
-                        "[Detailed explanation](https://writingexplained.org/on-accident-or-by-accident)"),
     Mistake("by purpose", "on purpose"),
     Mistake("apart of", "a part of",
             explanation="\"apart\" is an adverb meaning separately, "
