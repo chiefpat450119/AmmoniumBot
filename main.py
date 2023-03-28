@@ -3,6 +3,7 @@ from prawcore.exceptions import Forbidden
 from praw.exceptions import RedditAPIException
 import os
 import random
+import json
 
 # Script will run every 3 hours and go through every subreddit in the list
 
@@ -213,14 +214,26 @@ def is_bot(comment):
 
 # Main bot loop
 try:
+    # Iterate through subreddits
     for subreddit_name in monitored_subreddits:
         subreddit = reddit.subreddit(subreddit_name)
+
+        # Iterate through submissions in hot
         for submission in subreddit.hot(limit=20):
-            if not submission.locked:
-                submission.comments.replace_more(limit=None)
+            if not submission.locked:  # Check if submission is locked
+                submission.comments.replace_more(limit=None)  # Go through all comments
                 for comment in submission.comments.list():
                     print(f"Checking comment {comment.id} in {subreddit.display_name}")
-                    if not comment.saved and not is_bot(comment):
+
+                    # Check conditions before replying
+                    # Check if the user is on the blocklist
+                    with open("stopped_users.py", "r") as f:
+                        stopped_users = f.read().splitlines()
+                    try:
+                        user_stopped = comment.author.name in stopped_users
+                    except AttributeError:
+                        user_stopped = False
+                    if not any([is_bot(comment), comment.saved, user_stopped]):
                         for mistake in mistakes:
                             correction = mistake.check(comment.body.lower())
 
@@ -235,7 +248,9 @@ Explanation: {explanation}
 Total mistakes found: {get_counter()}  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
-^^[Github](https://github.com/chiefpat450119)""")
+^^[Github](https://github.com/chiefpat450119)  
+^^Reply ^^STOP ^^to ^^this ^^comment ^^to ^^stop ^^receiving ^^corrections.
+""")
 
                                 print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
@@ -256,15 +271,40 @@ Total mistakes found: {get_counter()}
         except AttributeError:
             pass
 
-        if "good bot" in message.body.lower():
+        # Check for STOP command
+        if "STOP" in message.body:
             message.mark_read()
+            # Send a DM
+            reddit.redditor(message.author.name).message(subject="Bot Stopped",
+                                                         message="You will no longer receive corrections from the bot.")
+            # Add user to blocklist
+            with open("stopped_users.py", "a") as f:
+                f.write(f"{message.author.name}\n")
+
+        elif "good bot" in message.body.lower():  # Autoreply to good and bad bot comments
+            message.mark_read()
+            # Increment good/bad bot counter json file
+            with open("good_bad_bot.json", "r") as f:
+                data = json.load(f)
+            data["good"] += 1
+            with open("good_bad_bot.json", "w") as f:
+                json.dump(data, f)
+
             # Send a reply
             message.reply(body="Thank you!")
 
         elif "bad bot" in message.body.lower():
             message.mark_read()
+            # Increment good/bad bot counter json file
+            with open("good_bad_bot.json", "r") as f:
+                data = json.load(f)
+            data["bad"] += 1
+            with open("good_bad_bot.json", "w") as f:
+                json.dump(data, f)
             # Send a reply
             message.reply(body="Hey, that hurt my feelings :(")
+
+
 
 
 # Catch rate limits
