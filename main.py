@@ -201,6 +201,8 @@ mistakes = [
             explanation="queue is a line, while cue is a signal."),
     Mistake("humanely possible", "humanly possible",
             explanation="humane means kind, while human means relating to humans."),
+    Mistake("intimated by", "intimidated by",
+            explanation="intimate means \"closely acquianted\", while intimidate means to frighten."),
 ]
 
 
@@ -272,7 +274,7 @@ Total mistakes found: {get_counter()}
             pass
 
         # Check for STOP command
-        if "STOP" in message.body:
+        if "STOP" in message.body.lower():
             message.mark_read()
             # Send a DM
             reddit.redditor(message.author.name).message(subject="Bot Stopped",
