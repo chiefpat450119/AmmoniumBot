@@ -274,7 +274,7 @@ Total mistakes found: {get_counter()}
             pass
 
         # Check for STOP command
-        if "STOP" in message.body.lower():
+        if "stop" in message.body.lower():
             message.mark_read()
             # Send a DM
             reddit.redditor(message.author.name).message(subject="Bot Stopped",
