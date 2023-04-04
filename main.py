@@ -1,6 +1,7 @@
 import praw
 from prawcore.exceptions import Forbidden
 from praw.exceptions import RedditAPIException
+from reply import send_correction, bot_reply, check_feedback
 import os
 import random
 import json
@@ -224,17 +225,19 @@ try:
         for submission in subreddit.hot(limit=20):
             if not submission.locked:  # Check if submission is locked
                 submission.comments.replace_more(limit=None)  # Go through all comments
+
                 for comment in submission.comments.list():
                     print(f"Checking comment {comment.id} in {subreddit.display_name}")
-
                     # Check conditions before replying
                     # Check if the user is on the blocklist
-                    with open("stopped_users.py", "r") as f:
+                    with open("stopped_users.txt", "r") as f:
                         stopped_users = f.read().splitlines()
                     try:
                         user_stopped = comment.author.name in stopped_users
                     except AttributeError:
                         user_stopped = False
+
+                    # Continue with check if all conditions met
                     if not any([is_bot(comment), comment.saved, user_stopped]):
                         for mistake in mistakes:
                             correction = mistake.check(comment.body.lower())
@@ -242,19 +245,15 @@ try:
                             if correction:
                                 explanation = mistake.explain()
                                 context = mistake.find_context(comment.body.lower())
-                                comment.reply(body=f"""
-> {context}  
-    
-Did you mean to say \"{correction}\"?  
-Explanation: {explanation}  
-Total mistakes found: {get_counter()}  
-^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
-^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
-^^[Github](https://github.com/chiefpat450119)  
-^^Reply ^^STOP ^^to ^^this ^^comment ^^to ^^stop ^^receiving ^^corrections.
-""")
 
-                                print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
+                                try:
+                                    send_correction(comment=comment, correction=correction, explanation=explanation,
+                                                    context=context, counter=get_counter())
+
+                                    print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
+
+                                except Forbidden:
+                                    continue
 
                                 # Save the comment so the bot doesn't reply to it again
                                 comment.save()
@@ -264,47 +263,25 @@ Total mistakes found: {get_counter()}
 
     # Automated reply
     for message in reddit.inbox.unread():
-        # Check if the username is accessible
         try:
-            # Auto reply to bots
-            if "bot" in message.author.name.lower():
-                message.reply(body="This is the superior bot.")
+            # Check for STOP command
+            if "stop" in message.body.lower():
                 message.mark_read()
+                # Send a DM
+                reddit.redditor(message.author.name).message(subject="Bot Stopped",
+                                                             message="You will no longer receive corrections from the bot.")
+                # Add user to blocklist
+                with open("stopped_users.txt", "a") as f:
+                    f.write(f"{message.author.name}\n")
+
+            bot_reply(message)
+
+            check_feedback(message)
+
+        except Forbidden:
+            continue
         except AttributeError:
-            pass
-
-        # Check for STOP command
-        if "stop" in message.body.lower():
-            message.mark_read()
-            # Send a DM
-            reddit.redditor(message.author.name).message(subject="Bot Stopped",
-                                                         message="You will no longer receive corrections from the bot.")
-            # Add user to blocklist
-            with open("stopped_users.py", "a") as f:
-                f.write(f"{message.author.name}\n")
-
-        elif "good bot" in message.body.lower():  # Autoreply to good and bad bot comments
-            message.mark_read()
-            # Increment good/bad bot counter json file
-            with open("good_bad_bot.json", "r") as f:
-                data = json.load(f)
-            data["good"] += 1
-            with open("good_bad_bot.json", "w") as f:
-                json.dump(data, f)
-
-            # Send a reply
-            message.reply(body="Thank you!")
-
-        elif "bad bot" in message.body.lower():
-            message.mark_read()
-            # Increment good/bad bot counter json file
-            with open("good_bad_bot.json", "r") as f:
-                data = json.load(f)
-            data["bad"] += 1
-            with open("good_bad_bot.json", "w") as f:
-                json.dump(data, f)
-            # Send a reply
-            message.reply(body="Hey, that hurt my feelings :(")
+            continue
 
 
 
@@ -312,9 +289,6 @@ Total mistakes found: {get_counter()}
 # Catch rate limits
 except RedditAPIException as e:
     print(e)
-# If banned or otherwise unable to comment or reply, just ignore it
-except Forbidden:
-    pass
 
 # Increment total run counter to prevent empty commit
 update_runs()
