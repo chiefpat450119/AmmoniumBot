@@ -217,6 +217,28 @@ def is_bot(comment):
 
 # Main bot loop
 try:
+    # Reply to messages
+    for message in reddit.inbox.unread():
+        try:
+            # Check for STOP command
+            if "stop" in message.body.lower():
+                message.mark_read()
+                # Send a DM
+                reddit.redditor(message.author.name).message(subject="Bot Stopped",
+                                                             message="You will no longer receive corrections from the bot.")
+                # Add user to blocklist
+                with open("stopped_users.txt", "a") as f:
+                    f.write(f"{message.author.name}\n")
+
+            bot_reply(message)
+
+            check_feedback(message)
+
+        except Forbidden:
+            continue
+        except AttributeError:
+            continue
+
     # Iterate through subreddits
     for subreddit_name in monitored_subreddits:
         subreddit = reddit.subreddit(subreddit_name)
@@ -260,30 +282,6 @@ try:
 
                                 # Stop looping through mistakes if one is found
                                 break
-
-    # Automated reply
-    for message in reddit.inbox.unread():
-        try:
-            # Check for STOP command
-            if "stop" in message.body.lower():
-                message.mark_read()
-                # Send a DM
-                reddit.redditor(message.author.name).message(subject="Bot Stopped",
-                                                             message="You will no longer receive corrections from the bot.")
-                # Add user to blocklist
-                with open("stopped_users.txt", "a") as f:
-                    f.write(f"{message.author.name}\n")
-
-            bot_reply(message)
-
-            check_feedback(message)
-
-        except Forbidden:
-            continue
-        except AttributeError:
-            continue
-
-
 
 
 # Catch rate limits
