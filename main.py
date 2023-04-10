@@ -268,6 +268,10 @@ try:
                                 explanation = mistake.explain()
                                 context = mistake.find_context(comment.body.lower())
 
+                                # Skip quoted mistakes
+                                if ">" in context:
+                                    continue
+
                                 try:
                                     send_correction(comment=comment, correction=correction, explanation=explanation,
                                                     context=context, counter=get_counter())

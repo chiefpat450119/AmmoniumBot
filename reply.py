@@ -31,7 +31,9 @@ def check_feedback(message):
 			json.dump(data, f)
 
 		# Send a reply
-		message.reply(body="Thank you!")
+		message.reply(body="Thank you!  "
+		                   "Good bot count: {data['good']}  "
+		                   "Bad bot count: {data['bad']}")
 
 	elif "bad bot" in message.body.lower():
 		message.mark_read()
@@ -42,4 +44,6 @@ def check_feedback(message):
 		with open("good_bad_bot.json", "w") as f:
 			json.dump(data, f)
 		# Send a reply
-		message.reply(body="Hey, that hurt my feelings :(")
+		message.reply(body="Hey, that hurt my feelings :(  "
+		                   "Good bot count: {data['good']}  "
+		                   "Bad bot count: {data['bad']}")
