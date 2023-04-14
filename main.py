@@ -262,13 +262,15 @@ try:
                     # Continue with check if all conditions met
                     if not any([is_bot(comment), comment.saved, user_stopped]):
                         for mistake in mistakes:
-                            # Strip quotes from the comment before checking it
-                            comment_without_quotes = "\n".join(line for line in comment.body.split("\n") if line[0] != ">").lower()
-                            correction = mistake.check(comment_without_quotes)
+                            correction = mistake.check(comment.body.lower())
 
                             if correction:
                                 explanation = mistake.explain()
-                                context = mistake.find_context(comment_without_quotes)
+                                context = mistake.find_context(comment.body.lower())
+
+                                # Skip quoted mistakes
+                                if ">" in context:
+                                    continue
 
                                 try:
                                     send_correction(comment=comment, correction=correction, explanation=explanation,
