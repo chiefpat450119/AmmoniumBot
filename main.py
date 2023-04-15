@@ -270,6 +270,9 @@ try:
                             correction = mistake.check(comment_without_quotes)
 
                             if correction:
+                                # Save the comment so the bot doesn't reply to it again
+                                comment.save()
+
                                 explanation = mistake.explain()
                                 context = mistake.find_context(comment_without_quotes)
 
@@ -279,11 +282,9 @@ try:
 
                                     print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
+                                # Skip comment if it's deleted or banned from subreddit
                                 except Forbidden:
                                     continue
-
-                                # Save the comment so the bot doesn't reply to it again
-                                comment.save()
 
                                 # Stop looping through mistakes if one is found
                                 break
