@@ -31,7 +31,7 @@ def check_feedback(message):
 			json.dump(data, f)
 
 		# Send a reply
-		message.reply(body=f"""Hey, that hurt my feelings :(  
+		message.reply(body=f"""Thank you!    
 		                   Good bot count: {data['good']}  
 		                   Bad bot count: {data['bad']}""")
 
