@@ -1,11 +1,13 @@
 import json
 
+# TODO: Add a stats link to the bot reply to replace the counter
+
 def send_correction(comment, context: str, correction: str, explanation: str, counter: int):
 	comment.reply(body=f"""
 > {context}  
     
 Did you mean to say \"{correction}\"?  
-Explanation: {explanation}  
+{explanation}  
 Total mistakes found: {counter}  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
