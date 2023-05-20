@@ -88,6 +88,8 @@ try:
             continue
         except AttributeError:
             continue
+        except RedditAPIException:
+            continue
 
     # Iterate through subreddits
     for subreddit_name in monitored_subreddits:

@@ -18,8 +18,8 @@ Total mistakes found: {counter}
 def bot_reply(message):
 	# Auto reply to bots
 	if "bot" in message.author.name.lower():
-		message.reply(body="This is the superior bot.")
 		message.mark_read()
+		message.reply(body="This is the superior bot.")
 
 
 def check_feedback(message):
