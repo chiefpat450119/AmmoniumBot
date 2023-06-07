@@ -101,3 +101,7 @@ apple
 programminghumor
 clashroyale
 brawlstars
+witcher
+witcher3
+reddeadredemption
+reddeadredemption2
