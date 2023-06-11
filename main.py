@@ -96,50 +96,55 @@ try:
         subreddit = reddit.subreddit(subreddit_name)
 
         # Iterate through submissions in hot
-        for submission in subreddit.hot(limit=20):
-            if not submission.locked:  # Check if submission is locked
-                submission.comments.replace_more(limit=None)  # Go through all comments
+        try:
+            for submission in subreddit.hot(limit=20):
+                if not submission.locked:  # Check if submission is locked
+                    submission.comments.replace_more(limit=None)  # Go through all comments
 
-                for comment in submission.comments.list():
-                    print(f"Checking comment {comment.id} in {subreddit.display_name}")
-                    # Check conditions before replying
-                    # Check if the user is on the blocklist
-                    with open("stopped_users.txt", "r") as f:
-                        stopped_users = f.read().splitlines()
-                    try:
-                        user_stopped = comment.author.name in stopped_users
-                    except AttributeError:
-                        user_stopped = False
+                    for comment in submission.comments.list():
+                        print(f"Checking comment {comment.id} in {subreddit.display_name}")
+                        # Check conditions before replying
+                        # Check if the user is on the blocklist
+                        with open("stopped_users.txt", "r") as f:
+                            stopped_users = f.read().splitlines()
+                        try:
+                            user_stopped = comment.author.name in stopped_users
+                        except AttributeError:
+                            user_stopped = False
 
-                    # Continue with check if all conditions met
-                    if not any([is_bot(comment), comment.saved, user_stopped]):
-                        for mistake in mistakes:
-                            # Strip quotes from the comment before checking it
-                            comment_without_quotes = "\n".join(
-                                line for line in comment.body.split("\n") if not line.startswith(">")
-                            ).lower()
+                        # Continue with check if all conditions met
+                        if not any([is_bot(comment), comment.saved, user_stopped]):
+                            for mistake in mistakes:
+                                # Strip quotes from the comment before checking it
+                                comment_without_quotes = "\n".join(
+                                    line for line in comment.body.split("\n") if not line.startswith(">")
+                                ).lower()
 
-                            correction = mistake.check(comment_without_quotes)
+                                correction = mistake.check(comment_without_quotes)
 
-                            if correction:
-                                # Save the comment so the bot doesn't reply to it again
-                                comment.save()
+                                if correction:
+                                    # Save the comment so the bot doesn't reply to it again
+                                    comment.save()
 
-                                explanation = mistake.explain()
-                                context = mistake.find_context(comment_without_quotes)
+                                    explanation = mistake.explain()
+                                    context = mistake.find_context(comment_without_quotes)
 
-                                try:
-                                    send_correction(comment=comment, correction=correction, explanation=explanation,
-                                                    context=context, counter=get_counter())
+                                    try:
+                                        send_correction(comment=comment, correction=correction, explanation=explanation,
+                                                        context=context, counter=get_counter())
 
-                                    print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
+                                        print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
-                                # Skip comment if it's deleted or banned from subreddit
-                                except Forbidden:
-                                    continue
+                                    # Skip comment if it's deleted or banned from subreddit
+                                    except Forbidden:
+                                        continue
 
-                                # Stop looping through mistakes if one is found
-                                break
+                                    # Stop looping through mistakes if one is found
+                                    break
+
+        # If subreddit is private, skip it
+        except Forbidden:
+            continue
 
 
 # Catch rate limits
