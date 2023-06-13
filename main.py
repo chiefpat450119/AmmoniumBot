@@ -9,15 +9,8 @@ import json
 
 # Script will run every 3 hours and go through every subreddit in the list
 
-# Get counter from stats file
-def get_counter():
-    with open("stats.json", "r") as file:
-        data = json.load(file)
-        counter = int(data["mistake counter"])
-    return counter
 
-
-# Update total runs in stats file in case there's no change in counter so no error is thrown
+# Update total runs in stats file in case there's no change in mistake counter so no error is thrown
 def update_runs():
     with open("stats.json", "r") as file:
         data = json.load(file)
@@ -138,7 +131,7 @@ try:
 
                                     try:
                                         send_correction(comment=comment, correction=correction, explanation=explanation,
-                                                        context=context, counter=get_counter())
+                                                        context=context)
 
                                         print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 

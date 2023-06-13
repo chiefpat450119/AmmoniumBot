@@ -1,14 +1,12 @@
 import json
 
-# TODO: Add a stats link to the bot reply to replace the counter
-
-def send_correction(comment, context: str, correction: str, explanation: str, counter: int):
+def send_correction(comment, context: str, correction: str, explanation: str):
 	comment.reply(body=f"""
 > {context}  
     
 Did you mean to say \"{correction}\"?  
 {explanation}  
-Total mistakes found: {counter}  
+[Statistics](https://github.com/chiefpat450119/RedditBot/blob/master/stats.json)  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
 ^^[Github](https://github.com/chiefpat450119)  
