@@ -142,4 +142,6 @@ mistakes = [
             explanation="humane means kind, while human means relating to humans."),
     Mistake("intimated by", "intimidated by",
             explanation="intimate means \"closely acquianted\", while intimidate means to frighten."),
+    Mistake("per say", "per se",
+            explanation="per se is latin for \"by itself\"."),
 ]
