@@ -25,7 +25,7 @@ class Mistake:
             # Update the counter in stats file
             with open("stats.json", "r") as f:
                 data = json.load(f)
-            data["mistakes"] += 1
+            data["mistake counter"] += 1
             with open("stats.json", "w") as f:
                 json.dump(data, f)
             return self.correction
