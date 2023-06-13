@@ -26,10 +26,10 @@ def check_feedback(message):
 	if "good bot" in message.body.lower():  # Auto-reply to good and bad bot comments
 		message.mark_read()
 		# Increment good/bad bot counter json file
-		with open("good_bad_bot.json", "r") as f:
+		with open("stats.json", "r") as f:
 			data = json.load(f)
 		data["good"] += 1
-		with open("good_bad_bot.json", "w") as f:
+		with open("stats.json", "w") as f:
 			json.dump(data, f)
 
 		# Send a reply
@@ -40,10 +40,10 @@ def check_feedback(message):
 	elif "bad bot" in message.body.lower():
 		message.mark_read()
 		# Increment good/bad bot counter json file
-		with open("good_bad_bot.json", "r") as f:
+		with open("stats.json", "r") as f:
 			data = json.load(f)
 		data["bad"] += 1
-		with open("good_bad_bot.json", "w") as f:
+		with open("stats.json", "w") as f:
 			json.dump(data, f)
 		# Send a reply
 		message.reply(body=f"""Hey, that hurt my feelings :(  

@@ -1,3 +1,5 @@
+import json
+
 # Base mistake class
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
@@ -20,11 +22,12 @@ class Mistake:
     def check(self, text):
         mistake_string = self.before + self.mistake + self.after
         if mistake_string in text and not self.is_exception(text):
-            # Update counter file
-            with open("counter.txt", "r") as file:
-                counter = int(file.read())
-            with open("counter.txt", "w") as file:
-                file.write(str(counter + 1))
+            # Update the counter in stats file
+            with open("stats.json", "r") as f:
+                data = json.load(f)
+            data["mistakes"] += 1
+            with open("stats.json", "w") as f:
+                json.dump(data, f)
             return self.correction
         return None
 

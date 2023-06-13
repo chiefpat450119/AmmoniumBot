@@ -5,23 +5,27 @@ from reply import send_correction, bot_reply, check_feedback
 import os
 import random
 from mistake_db import mistakes
+import json
 
 # Script will run every 3 hours and go through every subreddit in the list
 
-# Get counter from file
+# Get counter from stats file
 def get_counter():
-    with open("counter.txt", "r") as file:
-        counter = int(file.read())
+    with open("stats.json", "r") as file:
+        data = json.load(file)
+        counter = int(data["mistake counter"])
     return counter
 
 
-# Update total_runs.txt in case there's no change in counter so no error is thrown
+# Update total runs in stats file in case there's no change in counter so no error is thrown
 def update_runs():
-    with open("total_runs.txt", "r") as file:
-        runs = int(file.read())
+    with open("stats.json", "r") as file:
+        data = json.load(file)
+        runs = int(data["total runs"])
     runs += 1
-    with open("total_runs.txt", "w") as file:
-        file.write(str(runs))
+    with open("stats.json", "w") as file:
+        data["total runs"] = runs
+        json.dump(data, file)
 
 
 # Reddit API Setup
@@ -80,8 +84,10 @@ try:
                 with open("stopped_users.txt", "a") as f:
                     f.write(f"{message.author.name}\n")
 
+            # Reply to any bots messages in the inbox
             bot_reply(message)
 
+            # Check for feedback in comments
             check_feedback(message)
 
         except Forbidden:
@@ -120,6 +126,7 @@ try:
                                     line for line in comment.body.split("\n") if not line.startswith(">")
                                 ).lower()
 
+                                # Run the check method from the Mistake instance, incrementing the counter
                                 correction = mistake.check(comment_without_quotes)
 
                                 if correction:
