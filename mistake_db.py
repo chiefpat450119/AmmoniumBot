@@ -135,7 +135,6 @@ mistakes = [
     Mistake("peaked my curiosity", "piqued my curiosity",
             explanation="Some people might have peaked in high school, "
                         "but pique is a verb meaning to arouse interest."),
-    Mistake("by purpose", "on purpose"),
     Mistake("apart of", "a part of",
             explanation="\"apart\" is an adverb meaning separately, "
                         "while \"a part\" is a noun meaning a portion."),
@@ -147,4 +146,6 @@ mistakes = [
             explanation="intimate means \"closely acquianted\", while intimidate means to frighten."),
     Mistake("per say", "per se",
             explanation="per se is latin for \"by itself\"."),
+    Mistake("chocking", "choking",
+            explanation="chocking means to block a wheel, while choking means to suffocate."),
 ]
