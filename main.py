@@ -151,5 +151,9 @@ try:
 except RedditAPIException as e:
     print(e)
 
+# Catch 429 errors
+except Exception as e:
+    print(e)
+
 # Increment total run counter to prevent empty commit
 update_runs()
