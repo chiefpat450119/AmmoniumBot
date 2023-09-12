@@ -1,11 +1,12 @@
 import praw
-from prawcore.exceptions import Forbidden
+from prawcore.exceptions import Forbidden, TooManyRequests
 from praw.exceptions import RedditAPIException
 from reply import send_correction, bot_reply, check_feedback
 import os
 import random
 from mistake_db import mistakes
 import json
+from time import sleep
 
 # Script will run every 3 hours and go through every subreddit in the list
 
@@ -146,13 +147,15 @@ try:
         except Forbidden:
             continue
 
+        # Catch 429 errors, wait a while and then continue to next subreddit
+        except TooManyRequests as e:
+            print(e)
+            sleep(120)
+            continue
+
 
 # Catch rate limits
 except RedditAPIException as e:
-    print(e)
-
-# Catch 429 errors
-except Exception as e:
     print(e)
 
 # Increment total run counter to prevent empty commit
