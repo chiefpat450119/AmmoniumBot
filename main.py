@@ -6,7 +6,6 @@ import os
 import random
 from mistake_db import mistakes
 import json
-from time import sleep
 import backoff
 
 # Script will run every 3 hours and go through every subreddit in the list
