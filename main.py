@@ -8,6 +8,7 @@ from mistake_db import mistakes
 import json
 from time import sleep
 
+# TODO: Implement backoff for rate limits
 # Script will run every 3 hours and go through every subreddit in the list
 
 
