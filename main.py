@@ -7,8 +7,8 @@ import random
 from mistake_db import mistakes
 import json
 from time import sleep
+import backoff
 
-# TODO: Implement backoff for rate limits
 # Script will run every 3 hours and go through every subreddit in the list
 
 
@@ -63,9 +63,8 @@ def is_bot(comment):
     except AttributeError:
         return True
 
-
-# Main bot loop
-try:
+@backoff.on_exception(backoff.expo, TooManyRequests, max_tries=8)
+def main_loop():
     # Reply to messages
     for message in reddit.inbox.unread():
         try:
@@ -135,7 +134,8 @@ try:
                                         send_correction(comment=comment, correction=correction, explanation=explanation,
                                                         context=context)
 
-                                        print(f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
+                                        print(
+                                            f"Corrected a mistake in comment {comment.id} in {subreddit.display_name}")
 
                                     # Skip comment if it's deleted or banned from subreddit
                                     except Forbidden:
@@ -148,13 +148,10 @@ try:
         except Forbidden:
             continue
 
-        # Catch 429 errors, wait a while and then continue to next subreddit
-        except TooManyRequests as e:
-            print(e)
-            sleep(120)
-            continue
 
-
+# Execute main loop
+try:
+    main_loop()
 # Catch rate limits
 except RedditAPIException as e:
     print(e)
