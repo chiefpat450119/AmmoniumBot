@@ -62,7 +62,7 @@ def is_bot(comment):
     except AttributeError:
         return True
 
-@backoff.on_exception(backoff.expo, TooManyRequests, max_tries=20)
+@backoff.on_exception(backoff.expo, TooManyRequests, max_tries=10, raise_on_giveup=False)
 def main_loop():
     # Reply to messages
     for message in reddit.inbox.unread():
