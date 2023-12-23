@@ -1,5 +1,5 @@
 import praw
-from prawcore.exceptions import Forbidden, TooManyRequests
+from prawcore.exceptions import Forbidden, TooManyRequests, NotFound
 from praw.exceptions import RedditAPIException
 from reply import send_correction, bot_reply, check_feedback
 import os
@@ -145,6 +145,8 @@ def main_loop():
 
         # If subreddit is private, skip it
         except Forbidden:
+            continue
+        except NotFound:
             continue
 
 
