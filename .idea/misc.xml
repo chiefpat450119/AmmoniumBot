@@ -3,5 +3,8 @@
   <component name="AhkProjectSettings">
     <option name="defaultAhkSdk" value="AutoHotkey v2.0.2" />
   </component>
+  <component name="Black">
+    <option name="sdkName" value="Python 3.10 (RedditBot)" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (RedditBot)" project-jdk-type="Python SDK" />
 </project>

@@ -1,59 +1,26 @@
-import praw
 from prawcore.exceptions import Forbidden, TooManyRequests, NotFound
 from praw.exceptions import RedditAPIException
 from reply import send_correction, bot_reply, check_feedback
-import os
-import random
 from mistake_db import mistakes
 import json
 import backoff
+from praw_setup import get_reddit
+from subreddits import get_subreddits, update_subreddits
 
 # Script will run every 3 hours and go through every subreddit in the list
 
 
 # Update total runs in stats file in case there's no change in mistake counter so no error is thrown
 def update_runs():
-    with open("stats.json", "r") as file:
+    with open("data/stats.json", "r") as file:
         data = json.load(file)
         runs = int(data["total runs"])
     runs += 1
-    with open("stats.json", "w") as file:
+    with open("data/stats.json", "w") as file:
         data["total runs"] = runs
         json.dump(data, file)
 
-
-# Reddit API Setup
-client_id = os.environ.get("CLIENT_ID")
-client_secret = os.environ.get("CLIENT_SECRET")
-password = os.environ.get("PASSWORD")
-reddit = praw.Reddit(client_id=client_id,
-                     client_secret=client_secret,
-                     user_agent="console:ammonium:v1.1.0 (by /u/chiefpat450119)",
-                     username="ammonium_bot",
-                     password=password)
-
-# Detect subreddit bans and add to file
-for message in reddit.inbox.unread():
-    if "banned from participating" in message.subject.lower():
-        message.mark_read()
-        # Add to list of banned subreddits
-        with open("banned_subs.txt", "a") as file:
-            file.write(message.subreddit.display_name.lower() + "\n")
-
-
-# Read banned subreddits
-with open("banned_subs.txt", "r") as file:
-    banned_subreddits = file.read().splitlines()
-
-
-# List of subreddits monitored by the bot
-with open("monitored_subs.txt", "r") as file:
-    monitored_subreddits = file.read().splitlines()
-
-monitored_subreddits = [subreddit for subreddit in monitored_subreddits if subreddit.lower() not in banned_subreddits]
-# Starts from a different subreddit each time in case of ratelimit
-random.shuffle(monitored_subreddits)
-
+monitored_subreddits = []
 
 # Makes sure the comment author is not another bot
 def is_bot(comment):
@@ -63,7 +30,7 @@ def is_bot(comment):
         return True
 
 @backoff.on_exception(backoff.expo, TooManyRequests, max_tries=10, raise_on_giveup=False)
-def main_loop():
+def main_loop(reddit):
     # Reply to messages
     for message in reddit.inbox.unread():
         try:
@@ -74,7 +41,7 @@ def main_loop():
                 reddit.redditor(message.author.name).message(subject="Bot Stopped",
                                                              message="You will no longer receive corrections from the bot.")
                 # Add user to blocklist
-                with open("stopped_users.txt", "a") as f:
+                with open("data/stopped_users.txt", "a") as f:
                     f.write(f"{message.author.name}\n")
 
             # Reply to any bots messages in the inbox
@@ -101,10 +68,12 @@ def main_loop():
                     submission.comments.replace_more(limit=None)  # Go through all comments
 
                     for comment in submission.comments.list():
-                        print(f"Checking comment {comment.id} in {subreddit.display_name}")
+                        # print(f"Checking comment {comment.id} in {subreddit.display_name}")
+
                         # Check conditions before replying
+                        # TODO: Refactor this into a separate function
                         # Check if the user is on the blocklist
-                        with open("stopped_users.txt", "r") as f:
+                        with open("data/stopped_users.txt", "r") as f:
                             stopped_users = f.read().splitlines()
                         try:
                             user_stopped = comment.author.name in stopped_users
@@ -149,13 +118,18 @@ def main_loop():
         except NotFound:
             continue
 
+if __name__ == "__main__":
+    # Execute main loop
+    try:
+        # Update subreddit list
+        update_subreddits(reddit=get_reddit())
+        monitored_subreddits = get_subreddits()
+        main_loop(reddit=get_reddit())
+    # Catch rate limits
+    except RedditAPIException as e:
+        print(e)
 
-# Execute main loop
-try:
-    main_loop()
-# Catch rate limits
-except RedditAPIException as e:
-    print(e)
+    # Increment total run counter to prevent empty commit
+    update_runs()
 
-# Increment total run counter to prevent empty commit
-update_runs()
+
