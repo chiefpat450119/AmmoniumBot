@@ -22,12 +22,6 @@ class Mistake:
     def check(self, text):
         mistake_string = self.before + self.mistake + self.after
         if mistake_string in text and not self.is_exception(text):
-            # Update the counter in stats file
-            with open("data/stats.json", "r") as f:
-                data = json.load(f)
-            data["mistake counter"] += 1
-            with open("data/stats.json", "w") as f:
-                json.dump(data, f)
             return self.correction
         return None
 

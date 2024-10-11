@@ -1,5 +1,6 @@
 import json
 import backoff
+import praw
 from prawcore.exceptions import Forbidden, TooManyRequests, NotFound
 from praw.exceptions import RedditAPIException
 from reply import send_correction, bot_reply, check_feedback
@@ -8,9 +9,12 @@ from praw_setup import get_reddit
 from subreddits import get_subreddits, update_subreddits
 
 # Script will run every 3 hours and go through every subreddit in the list
+# TODO: Refactor the whole project and make it object-oriented
+# TODO: Make it smarter and more time efficient at detecting mistakes
 
 @backoff.on_exception(backoff.expo, TooManyRequests, max_tries=10, raise_on_giveup=False)
-def main_loop(reddit, subreddits):
+def main_loop(reddit: praw.Reddit, subreddits: list[str], ignored_users: dict[str, bool]):
+    mistakes_found = 0
     # Iterate through subreddits
     for subreddit_name in subreddits:
         subreddit = reddit.subreddit(subreddit_name)
@@ -25,7 +29,7 @@ def main_loop(reddit, subreddits):
                         # print(f"Checking comment {comment.id} in {subreddit.display_name}")
 
                         # Check conditions before replying
-                        user_stopped = is_stopped(comment)
+                        user_stopped = is_stopped(comment, ignored_users)
 
                         # Continue with check if all conditions met
                         if not any([is_bot(comment), comment.saved, user_stopped]):
@@ -56,6 +60,8 @@ def main_loop(reddit, subreddits):
                                     except Forbidden:
                                         continue
 
+                                    mistakes_found += 1
+
                                     # Stop looping through mistakes if one is found
                                     break
 
@@ -65,12 +71,18 @@ def main_loop(reddit, subreddits):
         except NotFound:
             continue
 
+    # Update the counter in stats file
+    with open("data/stats.json", "r") as f:
+        data = json.load(f)
+    data["mistake counter"] += mistakes_found
+    with open("data/stats.json", "w") as f:
+        json.dump(data, f)
 
-def is_stopped(comment):
+
+def is_stopped(comment, stopped_dict: dict[str, bool]):
     # Check if the user is on the blocklist
-    stopped_users = get_stopped_users()
     try:
-        user_stopped = comment.author.name in stopped_users
+        user_stopped = stopped_dict.get(comment.author.name, False)
     except AttributeError:
         user_stopped = False
     return user_stopped
@@ -92,15 +104,15 @@ def is_bot(comment):
     except AttributeError:
         return True
 
-
 def get_stopped_users():
     with open("data/stopped_users.txt", "r") as f:
-        stopped_users = f.read().splitlines()
-    return stopped_users
+        users = {user: True for user in f.read().splitlines()}
+    return users
 
 def check_inbox(reddit):
     # Reply to messages
     for message in reddit.inbox.unread():
+        # print(message.body.lower())
         try:
             # Check for STOP command
             if "stop" in message.body.lower():
@@ -128,12 +140,14 @@ def check_inbox(reddit):
 if __name__ == "__main__":
     # Execute main loop
     try:
+        stopped_users = get_stopped_users()
+        print(stopped_users)
         praw_instance = get_reddit()
         check_inbox(reddit=praw_instance)
         # Update subreddit list
         update_subreddits(reddit=praw_instance)
         monitored_subreddits = get_subreddits()
-        main_loop(reddit=praw_instance, subreddits=monitored_subreddits)
+        main_loop(reddit=praw_instance, subreddits=monitored_subreddits, ignored_users=stopped_users)
     # Catch rate limits
     except RedditAPIException as e:
         print(e)

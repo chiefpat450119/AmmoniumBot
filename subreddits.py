@@ -27,7 +27,7 @@ def update_from_txt():
 		subreddit_dict = {sub: sub in banned_subs for sub in monitored_subs}
 		json.dump(subreddit_dict, file)
 
-def get_subreddits():
+def get_subreddits() -> list[str]:
 	with open("data/subreddit_db.json", "r") as file:
 		subreddit_dict = json.load(file)
 		monitored_subreddits = [sub for sub, banned in subreddit_dict.items() if not banned]
