@@ -151,6 +151,7 @@ if __name__ == "__main__":
     # Catch rate limits
     except RedditAPIException as e:
         print(e)
+        raise Exception("Reddit API Exception")
 
     # Increment total run counter to prevent empty commit
     update_runs()
