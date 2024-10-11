@@ -7,7 +7,7 @@ def send_correction(comment, context: str, correction: str, explanation: str):
 Hi, did you mean to say \"{correction}\"?  
 {explanation}  
 Sorry if I made a mistake! Please [let me know](https://www.reddit.com/message/compose/?to=chiefpat450119&subject=Bot%20Feedback&message=Your%20feedback%20here) if I did.
-Have a great day!
+Have a great day!  
 [Statistics](https://github.com/chiefpat450119/RedditBot/blob/master/stats.json)  
 ^^I'm ^^a ^^bot ^^that ^^corrects ^^grammar/spelling ^^mistakes.
 ^^PM ^^me ^^if ^^I'm ^^wrong ^^or ^^if ^^you ^^have ^^any ^^suggestions.   
