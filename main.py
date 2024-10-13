@@ -9,7 +9,7 @@ from mistakes import mistakes, MistakeChecker
 from data_manager import get_subreddits, update_sub_db, get_stopped_users, update_runs
 
 # Script will run every 6 hours and go through every subreddit in the list
-# TODO: Make it smarter and more time efficient at detecting mistakes
+# TODO: Add tests
 
 class AmmoniumBot:
     def __init__(self):
