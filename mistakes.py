@@ -1,33 +1,32 @@
-import json
+from typing import Optional
+
 
 # Base mistake class
 class Mistake:
     # Constructor function; Parameters for any exceptions, required context and explanations
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
-        self.mistake = mistake
-        self.correction = correction
-        self.exceptions = exceptions
-        self.before = before
-        self.after = after
-        self.explanation = explanation
+        self.__mistake = mistake
+        self.__correction = correction
+        self.__exceptions = exceptions
+        self.__before = before
+        self.__after = after
+        self.__explanation = explanation
 
     # Method to check if the comment is an exception
-    def is_exception(self, text):
-        if not self.exceptions:
+    def is_exception(self, text) -> bool:
+        if not self.__exceptions:
             return False
-        exceptions_found = [exception in text for exception in self.exceptions]
+        exceptions_found = [exception in text for exception in self.__exceptions]
         return any(exceptions_found)
 
     # Method that checks for mistakes in comments and returns relevant corrections
-    def check(self, text):
-        mistake_string = self.before + self.mistake + self.after
-        if mistake_string in text and not self.is_exception(text):
-            return self.correction
-        return None
+    def check(self, text) -> bool:
+        mistake_string = self.__before + self.__mistake + self.__after
+        return mistake_string in text and not self.is_exception(text)
 
     # Methods that returns the context of the mistake in the comment
-    def find_context(self, text):
-        mistake_string = self.before + self.mistake + self.after
+    def find_context(self, text) -> str:
+        mistake_string = self.__before + self.__mistake + self.__after
         # Find the index of the mistake
         index = text.find(mistake_string)
         # Find the index of the first space before the mistake
@@ -41,10 +40,13 @@ class Mistake:
         # Return the context
         return text[first_space:second_space]
 
+    def get_correction(self) -> str:
+        return self.__correction
+
     # Returns the explanation
-    def explain(self):
-        if self.explanation:
-            return f"Explanation: {self.explanation}"
+    def get_explanation(self) -> str:
+        if self.__explanation:
+            return f"Explanation: {self.__explanation}"
         return ""
 
 
@@ -143,3 +145,15 @@ mistakes = [
     Mistake("chocking", "choking",
             explanation="chocking means to block a wheel, while choking means to suffocate."),
 ]
+
+
+class MistakeChecker:
+    def __init__(self):
+        self.__mistake_list = mistakes
+
+    def find_mistake(self, comment_text: str) -> Optional[Mistake]:
+        for mistake in self.__mistake_list:
+            has_mistake = mistake.check(comment_text)
+            if has_mistake:
+                return mistake
+        return None
