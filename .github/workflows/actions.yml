@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: checkout repo content
-        uses: actions/checkout@v4.2.0 # checkout the repository content to GitHub runner
+        uses: actions/checkout@v4.2.1 # checkout the repository content to GitHub runner
 
 
       - name: setup python
