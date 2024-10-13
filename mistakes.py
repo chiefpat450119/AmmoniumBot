@@ -7,16 +7,16 @@ class Mistake:
     def __init__(self, mistake: str, correction: str, exceptions=None, before=" ", after=" ", explanation=None):
         self.__mistake = mistake
         self.__correction = correction
-        self.__exceptions = exceptions
+        self._exceptions = exceptions
         self.__before = before
         self.__after = after
         self.__explanation = explanation
 
     # Method to check if the comment is an exception
     def is_exception(self, text) -> bool:
-        if not self.__exceptions:
+        if not self._exceptions:
             return False
-        exceptions_found = [exception in text for exception in self.__exceptions]
+        exceptions_found = [exception in text for exception in self._exceptions]
         return any(exceptions_found)
 
     # Method that checks for mistakes in comments and returns relevant corrections
@@ -53,16 +53,16 @@ class Mistake:
 # There's so many variations of this mistake that I made a subclass for it
 class OfMistake(Mistake):
     def __init__(self, mistake, exceptions=None):
-        super().__init__(mistake=mistake, correction=mistake + " have", exceptions=exceptions, before=" ", after=" of ")
-        self.explanation = "You probably meant to say could've/should've/would've which sounds like 'of' but is actually short for 'have'."
+        super().__init__(mistake=mistake, correction=mistake + " have", exceptions=exceptions, before=" ", after=" of ",
+                         explanation="You probably meant to say could've/should've/would've which sounds like 'of' but is actually short for 'have'.")
         if not exceptions:
-            self.exceptions = ["of course"]
+            self._exceptions = ["of course"]
 
 # Likewise for this one
 class LooseMistake(Mistake):
     def __init__(self, after, exceptions=None):
-        super().__init__(mistake="loose", correction="lose", exceptions=exceptions, before=" ", after=after)
-        self.explanation = "Loose is an adjective meaning the opposite of tight, while lose is a verb."
+        super().__init__(mistake="loose", correction="lose", exceptions=exceptions, before=" ", after=after,
+                         explanation="Loose is an adjective meaning the opposite of tight, while lose is a verb.")
 
 
 # List of mistake instances that the bot iterates through

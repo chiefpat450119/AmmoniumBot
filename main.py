@@ -39,11 +39,12 @@ class AmmoniumBot:
             # Iterate through submissions in hot
             try:
                 for submission in subreddit.hot(limit=20):
-                    if not submission.locked:  # Check if submission is locked
-                        submission.comments.replace_more(limit=None)  # Go through all comments
+                    if not submission.saved and not submission.locked:  # Check if submission is saved or locked
+                        submission.comments.replace_more(limit=None)  # Get all comments
 
+                        # Loop through comments in submission
                         for comment in submission.comments.list():
-                            # print(f"Checking comment {comment.id} in {subreddit.display_name}")
+                            # print(f"{comment.id} in {subreddit.display_name}")
 
                             # Check conditions before replying
                             user_stopped = self.is_stopped(comment)
@@ -75,12 +76,16 @@ class AmmoniumBot:
 
                                     mistakes_found += 1
 
+                        submission.save()  # Save submission so the bot doesn't check it again
+                        # print(f"Saved submission {submission.id} in {subreddit.display_name}")
 
             # If subreddit is private, skip it
             except Forbidden:
                 continue
             except NotFound:
                 continue
+
+
 
         # Update the counter in stats file
         with open("data/stats.json", "r") as f:
