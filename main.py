@@ -5,7 +5,7 @@ import os
 from prawcore.exceptions import Forbidden, TooManyRequests, NotFound
 from praw.exceptions import RedditAPIException
 from reply import ReplyManager
-from mistakes import mistakes, MistakeChecker
+from mistakes import MistakeChecker
 from data_manager import get_subreddits, update_sub_db, get_stopped_users, update_runs
 
 # Script will run every 6 hours and go through every subreddit in the list
@@ -77,7 +77,7 @@ class AmmoniumBot:
                                     mistakes_found += 1
 
                         submission.save()  # Save submission so the bot doesn't check it again
-                        # print(f"Saved submission {submission.id} in {subreddit.display_name}")
+                        print(f"Saved submission {submission.id} in {subreddit.display_name}")
 
             # If subreddit is private, skip it
             except Forbidden:
