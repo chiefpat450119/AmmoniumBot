@@ -10,7 +10,6 @@ from mistakes import MistakeChecker, mistakes
 from data_manager import FileManager
 
 # Script will run every 6 hours and go through every subreddit in the list
-# TODO: Add tests
 
 class AmmoniumBot:
     def __init__(self, reply_manager: ReplyManager, file_manager: FileManager, mistake_checker: MistakeChecker):
@@ -126,7 +125,7 @@ class AmmoniumBot:
                 print(e)
                 continue
             except AttributeError as e:
-                print(e)
+                print(e.__traceback__)
                 continue
             except RedditAPIException as e:
                 print(e)
@@ -167,7 +166,8 @@ if __name__ == "__main__":
     fm = FileManager("data/stopped_users.txt",
                      "data/stats.json",
                      "data/banned_subs.txt",
-                     "data/subreddit_db.json")
+                     "data/subreddit_db.json",
+                     "data/monitored_subs.txt")
     mc = MistakeChecker(mistakes)
     bot = AmmoniumBot(rm, fm, mc)
     bot.run()

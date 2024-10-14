@@ -2,10 +2,11 @@ import random
 import json
 
 class FileManager:
-	def __init__(self, stopped_path, stats_path, banned_subs_path, sub_db_path):
+	def __init__(self, stopped_path, stats_path, banned_subs_path, sub_db_path, monitored_subs_path):
 		self.stopped_path = stopped_path
 		self.stats_path = stats_path
 		self.banned_subs_path = banned_subs_path
+		self.monitored_subs_path = monitored_subs_path
 		self.sub_db_path = sub_db_path
 
 	def get_stopped_users(self) -> dict[str, bool]:
@@ -37,7 +38,7 @@ class FileManager:
 		# Update database with using the current text files
 		with open(self.banned_subs_path, "r") as file:
 			banned_subs = file.read().splitlines()
-		with open(self.sub_db_path, "r") as file:
+		with open(self.monitored_subs_path, "r") as file:
 			monitored_subs = file.read().splitlines()
 		with open(self.sub_db_path, "w") as file:
 			subreddit_dict = {sub: sub in banned_subs for sub in monitored_subs}
