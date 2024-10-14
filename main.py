@@ -10,6 +10,7 @@ from praw.exceptions import RedditAPIException
 from reply import ReplyManager
 from mistakes import MistakeChecker, mistakes
 from data_manager import FileManager
+import datetime
 
 # Script will run every 6 hours and go through every subreddit in the list
 
@@ -47,6 +48,7 @@ class AmmoniumBot:
             try:
                 for submission in subreddit.hot(limit=20):
                     if not submission.saved and not submission.locked:  # Check if submission is saved or locked
+                        print(f"{submission.id} in {subreddit.display_name}")
                         submission.comments.replace_more(limit=None)  # Get all comments
 
                         # Loop through comments in submission
@@ -83,8 +85,11 @@ class AmmoniumBot:
 
                                     mistakes_found += 1
 
-                        submission.save()  # Save submission so the bot doesn't check it again
-                        print(f"Saved submission {submission.id} in {subreddit.display_name}")
+                        # Save submission (do not revisit) if it is older than a day
+                        if submission and (datetime.datetime.now(datetime.UTC) - datetime.datetime.fromtimestamp(
+                            submission.created_utc, datetime.UTC)).days >= 1:
+                            submission.save()  # Save submission so the bot doesn't check it again
+                            print(f"Saved submission {submission.id} in {subreddit.display_name}")
 
             # If subreddit is private, skip it
             except Forbidden:
