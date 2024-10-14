@@ -1,3 +1,5 @@
+import traceback
+
 import backoff
 import praw
 import os
@@ -121,14 +123,14 @@ class AmmoniumBot:
                 # Check for feedback in comments
                 self.reply_manager.check_feedback(message)
 
-            except Forbidden as e:
-                print(e)
+            except Forbidden:
+                traceback.print_exc()
                 continue
-            except AttributeError as e:
-                print(e.__traceback__)
+            except AttributeError:
+                traceback.print_exc()
                 continue
-            except RedditAPIException as e:
-                print(e)
+            except RedditAPIException:
+                traceback.print_exc()
                 continue
 
     def update_subreddits(self):
