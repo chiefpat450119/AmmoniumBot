@@ -1,13 +1,14 @@
 import json
 
 import praw
+from praw import models
 
 from mistakes import Mistake
 
 
 class ReplyManager:
 	@staticmethod
-	def send_correction(comment: praw.Reddit.comment, text: str, mistake: Mistake):
+	def send_correction(comment: praw.models.Comment, text: str, mistake: Mistake):
 		context = mistake.find_context(text)
 		comment.reply(body=f"""
 > {context}  
@@ -59,3 +60,9 @@ Have a great day!
 			message.reply(body=f"""Hey, that hurt my feelings :(  
 			                   Good bot count: {data['good']}  
 			                   Bad bot count: {data['bad']}""")
+
+	@staticmethod
+	def stop_message(user: praw.models.Redditor):
+		# Send a DM
+		user.message(subject="Bot Stopped",
+		             message="You will no longer receive corrections from the bot.")
