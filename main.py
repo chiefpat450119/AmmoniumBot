@@ -106,7 +106,7 @@ class AmmoniumBot:
     def check_inbox(self):
         # Reply to messages
         for message in self.praw_instance.inbox.unread():
-            print(message.body.lower())
+            # print(message.body.lower())
             try:
                 # Check for STOP command
                 if "stop" in message.body.lower():
