@@ -2,11 +2,11 @@ import random
 import json
 
 class FileManager:
-	def __init__(self):
-		self.stopped_path = "data/stopped_users.txt"
-		self.stats_path = "data/stats.json"
-		self.banned_subs_path = "data/banned_subs.txt"
-		self.sub_db_path = "data/subreddit_db.json"
+	def __init__(self, stopped_path, stats_path, banned_subs_path, sub_db_path):
+		self.stopped_path = stopped_path
+		self.stats_path = stats_path
+		self.banned_subs_path = banned_subs_path
+		self.sub_db_path = sub_db_path
 
 	def get_stopped_users(self) -> dict[str, bool]:
 		with open(self.stopped_path, "r") as f:

@@ -6,7 +6,7 @@ from praw import models
 from prawcore.exceptions import Forbidden, TooManyRequests, NotFound
 from praw.exceptions import RedditAPIException
 from reply import ReplyManager
-from mistakes import MistakeChecker
+from mistakes import MistakeChecker, mistakes
 from data_manager import FileManager
 
 # Script will run every 6 hours and go through every subreddit in the list
@@ -122,11 +122,14 @@ class AmmoniumBot:
                 # Check for feedback in comments
                 self.reply_manager.check_feedback(message)
 
-            except Forbidden:
+            except Forbidden as e:
+                print(e)
                 continue
-            except AttributeError:
+            except AttributeError as e:
+                print(e)
                 continue
-            except RedditAPIException:
+            except RedditAPIException as e:
+                print(e)
                 continue
 
     def update_subreddits(self):
@@ -161,7 +164,10 @@ class AmmoniumBot:
 
 if __name__ == "__main__":
     rm = ReplyManager()
-    fm = FileManager()
-    mc = MistakeChecker()
+    fm = FileManager("data/stopped_users.txt",
+                     "data/stats.json",
+                     "data/banned_subs.txt",
+                     "data/subreddit_db.json")
+    mc = MistakeChecker(mistakes)
     bot = AmmoniumBot(rm, fm, mc)
     bot.run()

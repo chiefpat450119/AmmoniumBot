@@ -148,8 +148,8 @@ mistakes = [
 
 
 class MistakeChecker:
-    def __init__(self):
-        self.__mistake_list = mistakes
+    def __init__(self, mistake_list):
+        self.__mistake_list = mistake_list
 
     def find_mistake(self, comment_text: str) -> Optional[Mistake]:
         for mistake in self.__mistake_list:
