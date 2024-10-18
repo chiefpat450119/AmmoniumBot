@@ -1,5 +1,9 @@
 import random
 import json
+from typing import Tuple, Any
+
+from reply import FeedBack
+
 
 class FileManager:
 	def __init__(self, stopped_path, stats_path, banned_subs_path, sub_db_path, monitored_subs_path):
@@ -63,3 +67,15 @@ class FileManager:
 	def add_to_blocklist(self, username: str):
 		with open(self.stopped_path, "a") as f:
 			f.write(f"{username}\n")
+
+	def update_good_bad(self, feedback: FeedBack) -> tuple[int, int]:
+		with open(self.stats_path, "r") as f:
+			stats = json.load(f)
+		if feedback == FeedBack.GOOD_BOT:
+			stats["good"] += 1
+		elif feedback == FeedBack.BAD_BOT:
+			stats["bad"] += 1
+		with open(self.stats_path, "w") as f:
+			json.dump(stats, f)
+
+		return stats["good"], stats["bad"]

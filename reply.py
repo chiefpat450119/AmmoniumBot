@@ -4,7 +4,11 @@ import praw
 from praw import models
 
 from mistakes import Mistake
+from enum import Enum
 
+class FeedBack(Enum):
+	GOOD_BOT = "good bot"
+	BAD_BOT = "bad bot"
 
 class ReplyManager:
 	@staticmethod
@@ -33,33 +37,22 @@ Have a great day!
 
 
 	@staticmethod
-	def check_feedback(message):
+	def check_feedback(message, file_manager):
 		if "good bot" in message.body.lower():  # Auto-reply to good and bad bot comments
 			message.mark_read()
-			# Increment good/bad bot counter json file
-			with open("data/stats.json", "r") as f:
-				data = json.load(f)
-			data["good"] += 1
-			with open("data/stats.json", "w") as f:
-				json.dump(data, f)
-
+			num_good, num_bad = file_manager.update_good_bad(FeedBack.GOOD_BOT)
 			# Send a reply
 			message.reply(body=f"""Thank you!    
-			                   Good bot count: {data['good']}  
-			                   Bad bot count: {data['bad']}""")
+			                   Good bot count: {num_good}  
+			                   Bad bot count: {num_bad}""")
 
 		elif "bad bot" in message.body.lower():
 			message.mark_read()
-			# Increment good/bad bot counter json file
-			with open("data/stats.json", "r") as f:
-				data = json.load(f)
-			data["bad"] += 1
-			with open("data/stats.json", "w") as f:
-				json.dump(data, f)
+			num_good, num_bad = file_manager.update_good_bad(FeedBack.BAD_BOT)
 			# Send a reply
 			message.reply(body=f"""Hey, that hurt my feelings :(  
-			                   Good bot count: {data['good']}  
-			                   Bad bot count: {data['bad']}""")
+			                   Good bot count: {num_good}  
+			                   Bad bot count: {num_bad}""")
 
 	@staticmethod
 	def stop_message(user: praw.models.Redditor):
