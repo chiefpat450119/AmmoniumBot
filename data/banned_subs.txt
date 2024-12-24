@@ -94,3 +94,4 @@ askscience
 pics
 aww
 todayilearned
+quotes
